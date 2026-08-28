@@ -1050,13 +1050,15 @@ function copyRigForm(btn){
   overlay.id = 'lightbox-overlay';
   overlay.innerHTML = `
     <button type="button" class="lightbox-close" id="lightbox-close" aria-label="닫기">✕</button>
-    <button type="button" class="lightbox-nav lightbox-prev" id="lightbox-prev" aria-label="이전">‹</button>
-    <div class="lightbox-stage">
-      <div class="lightbox-gif-badge" id="lightbox-gif-badge">GIF</div>
-      <img id="lightbox-img" src="" alt="">
-      <div class="lightbox-caption" id="lightbox-caption"></div>
+    <div class="lightbox-frame">
+      <button type="button" class="lightbox-nav lightbox-prev" id="lightbox-prev" aria-label="이전"><span>‹</span></button>
+      <div class="lightbox-stage">
+        <div class="lightbox-gif-badge" id="lightbox-gif-badge">GIF</div>
+        <img id="lightbox-img" src="" alt="">
+        <div class="lightbox-caption" id="lightbox-caption"></div>
+      </div>
+      <button type="button" class="lightbox-nav lightbox-next" id="lightbox-next" aria-label="다음"><span>›</span></button>
     </div>
-    <button type="button" class="lightbox-nav lightbox-next" id="lightbox-next" aria-label="다음">›</button>
     <div class="lightbox-thumbs" id="lightbox-thumbs"></div>
   `;
   document.body.appendChild(overlay);
@@ -1069,27 +1071,27 @@ function copyRigForm(btn){
       opacity:0;transition:opacity .2s ease;box-sizing:border-box;
     }
     .lightbox-overlay.show{display:flex;opacity:1;}
-    .lightbox-stage{position:relative;display:flex;flex-direction:column;align-items:center;}
-    .lightbox-overlay img{max-width:min(85vw,760px);max-height:480px;width:auto;height:auto;object-fit:contain;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.35);cursor:default;user-select:none;-webkit-user-drag:none;background:#111;}
+    .lightbox-frame{position:relative;display:flex;align-items:center;justify-content:center;gap:14px;max-width:min(92vw,820px);width:100%;}
+    .lightbox-stage{position:relative;display:flex;flex-direction:column;align-items:center;min-width:0;flex:1;}
+    .lightbox-overlay img{max-width:100%;max-height:480px;width:auto;height:auto;object-fit:contain;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.35);cursor:default;user-select:none;-webkit-user-drag:none;background:#111;}
     .lightbox-gif-badge{position:absolute;top:14px;left:14px;background:rgba(30,30,35,.75);color:#fff;font-size:11px;font-weight:800;letter-spacing:.05em;padding:4px 10px;border-radius:8px;display:none;}
     .lightbox-caption{
       margin-top:16px;background:rgba(255,255,255,.92);color:var(--ink);font-size:14px;font-weight:700;
-      padding:9px 18px;border-radius:999px;box-shadow:0 8px 20px -8px rgba(0,0,0,.3);max-width:80vw;
-      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+      padding:9px 18px;border-radius:20px;box-shadow:0 8px 20px -8px rgba(0,0,0,.3);max-width:100%;
+      white-space:pre-line;text-align:center;line-height:1.5;
     }
     .lightbox-close{position:absolute;top:22px;right:26px;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.85);color:#333333;font-size:20px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;}
     .lightbox-close:hover{background:#fff;}
     .lightbox-nav{
-      position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:none;
-      background:rgba(255,255,255,.85);color:#333333;font-size:24px;font-weight:800;cursor:pointer;
+      position:relative;flex:0 0 auto;width:44px;height:44px;border-radius:50%;border:none;padding:0;
+      background:rgba(255,255,255,.85);color:#333333;font-size:24px;font-weight:800;line-height:1;cursor:pointer;
       display:flex;align-items:center;justify-content:center;z-index:2;
     }
+    .lightbox-nav span{display:block;transform:translateY(-2px);}
     .lightbox-nav:hover{background:#fff;}
     .lightbox-nav:disabled{opacity:.35;cursor:default;}
-    .lightbox-prev{left:26px;}
-    .lightbox-next{right:26px;}
     .lightbox-thumbs{
-      display:flex;gap:8px;margin-top:20px;max-width:90vw;overflow-x:auto;padding:4px 2px;
+      display:flex;gap:8px;margin-top:20px;max-width:min(92vw,820px);overflow-x:auto;padding:4px 2px;
       scrollbar-width:thin;
     }
     .lightbox-thumb{
@@ -1101,8 +1103,7 @@ function copyRigForm(btn){
     .lightbox-thumb-badge{position:absolute;bottom:2px;right:2px;background:rgba(30,30,35,.8);color:#fff;font-size:8px;font-weight:800;padding:1px 4px;border-radius:5px;}
     @media (max-width:600px){
       .lightbox-nav{width:36px;height:36px;font-size:19px;}
-      .lightbox-prev{left:8px;}
-      .lightbox-next{right:8px;}
+      .lightbox-frame{gap:6px;}
       .lightbox-thumb{width:44px;height:44px;}
     }
   `;
