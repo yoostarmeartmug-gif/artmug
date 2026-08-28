@@ -1055,7 +1055,7 @@ function copyRigForm(btn){
     .portfolio-item img{cursor:zoom-in;}
     .lightbox-overlay{position:absolute;left:0;width:100%;background:rgba(90,84,104,.55);z-index:999;display:none;align-items:center;justify-content:center;padding:40px;opacity:0;transition:opacity .2s ease;box-sizing:border-box;}
     .lightbox-overlay.show{display:flex;opacity:1;}
-    .lightbox-overlay img{max-width:min(92vw,900px);max-height:88vh;width:auto;height:auto;object-fit:contain;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.3);cursor:default;user-select:none;-webkit-user-drag:none;}
+    .lightbox-overlay img{max-width:min(92vw,900px);max-height:640px;width:auto;height:auto;object-fit:contain;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.3);cursor:default;user-select:none;-webkit-user-drag:none;}
     .lightbox-close{position:absolute;top:22px;right:26px;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.7);color:#333333;font-size:20px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;}
     .lightbox-close:hover{background:#fff;}
   `;
@@ -1063,25 +1063,36 @@ function copyRigForm(btn){
 
   const imgEl = document.getElementById('lightbox-img');
   const closeBtn = document.getElementById('lightbox-close');
-  function positionLightbox(){
-    /* 이 페이지가 다른 사이트에 iframe으로 삽입될 때, position:fixed는 화면(viewport)이 아니라
-       전체 문서(iframe 안쪽 스크롤 영역) 기준으로 동작해 화면 중앙이 아닌 문서 중앙에 뜰 수 있다.
-       그래서 실제로 지금 보이는 스크롤 위치(window.scrollY)를 기준으로 위치를 잡아준다. */
-    overlay.style.top = window.scrollY + 'px';
-    overlay.style.height = window.innerHeight + 'px';
+  /* 이 페이지는 아트머그 등 다른 사이트에 iframe으로 삽입되는데, 그 iframe은 내용 전체 높이만큼
+     자동으로 커지고 실제 스크롤은 바깥(부모) 페이지에서 일어난다. 그래서 이 안에서는
+     "지금 사용자 화면에 보이는 위치"를 알 수 없다 — window.scrollY/innerHeight는 항상 이 iframe
+     자체 기준이라 부모 페이지의 스크롤과 무관하다. 대신 방금 클릭한 썸네일 위치를 기준으로
+     그 근처(현재 화면에 보이고 있을 가능성이 가장 높은 위치)에 창을 띄운다. */
+  function positionLightbox(anchorEl){
+    const boxHeight = 720; /* 확대 이미지 + 여백을 담기 위한 대략적인 높이 */
+    const docHeight = document.documentElement.scrollHeight;
+    let top;
+    if(anchorEl){
+      const rect = anchorEl.getBoundingClientRect();
+      const anchorTop = rect.top + window.scrollY;
+      top = anchorTop - (boxHeight / 2) + (rect.height / 2);
+    } else {
+      top = window.scrollY;
+    }
+    top = Math.max(0, Math.min(top, Math.max(0, docHeight - boxHeight)));
+    overlay.style.top = top + 'px';
+    overlay.style.height = boxHeight + 'px';
   }
-  function openLightbox(src, alt){
+  function openLightbox(src, alt, anchorEl){
     if(!src) return;
     imgEl.src = src; imgEl.alt = alt || '';
-    positionLightbox();
+    positionLightbox(anchorEl);
     overlay.classList.add('show'); document.body.style.overflow = 'hidden';
   }
   function closeLightbox(){ overlay.classList.remove('show'); document.body.style.overflow = ''; imgEl.src = ''; }
-  window.addEventListener('scroll', () => { if(overlay.classList.contains('show')) positionLightbox(); });
-  window.addEventListener('resize', () => { if(overlay.classList.contains('show')) positionLightbox(); });
   document.addEventListener('click', (e) => {
     const target = e.target.closest('.portfolio-item img');
-    if(target){ openLightbox(target.currentSrc || target.src, target.alt); }
+    if(target){ openLightbox(target.currentSrc || target.src, target.alt, target); }
   });
   closeBtn.addEventListener('click', closeLightbox);
   overlay.addEventListener('click', (e) => { if(e.target === overlay) closeLightbox(); });
