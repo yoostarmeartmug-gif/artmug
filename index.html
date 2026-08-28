@@ -125,7 +125,7 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 }
 .hero-tag:hover{transform:scale(1.08);box-shadow:0 8px 18px -6px rgba(155,127,209,.5);}
 .hero-tags .hero-tag:nth-child(1){border-color:rgba(155,127,209,.3);color:#B6A2DD;background:rgba(155,127,209,.06);}
-.hero-tags .hero-tag:nth-child(2){border-color:rgba(224,120,120,.3);color:#E5AFAF;background:rgba(224,120,120,.06);}
+.hero-tags .hero-tag:nth-child(2){border-color:rgba(140,140,220,.3);color:#A6A6E0;background:rgba(140,140,220,.06);}
 .hero-tags .hero-tag:nth-child(3){border-color:rgba(127,170,224,.3);color:#A9C4E8;background:rgba(127,170,224,.06);}
 .hero-tags .hero-tag:nth-child(4){border-color:rgba(122,190,150,.3);color:#A4D4B7;background:rgba(122,190,150,.06);}
 
@@ -1053,7 +1053,7 @@ function copyRigForm(btn){
   const style = document.createElement('style');
   style.textContent = `
     .portfolio-item img{cursor:zoom-in;}
-    .lightbox-overlay{position:fixed;inset:0;background:rgba(90,84,104,.55);z-index:999;display:none;align-items:center;justify-content:center;padding:40px;opacity:0;transition:opacity .2s ease;}
+    .lightbox-overlay{position:absolute;left:0;width:100%;background:rgba(90,84,104,.55);z-index:999;display:none;align-items:center;justify-content:center;padding:40px;opacity:0;transition:opacity .2s ease;box-sizing:border-box;}
     .lightbox-overlay.show{display:flex;opacity:1;}
     .lightbox-overlay img{max-width:min(92vw,900px);max-height:88vh;width:auto;height:auto;object-fit:contain;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.3);cursor:default;user-select:none;-webkit-user-drag:none;}
     .lightbox-close{position:absolute;top:22px;right:26px;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.7);color:#333333;font-size:20px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;}
@@ -1063,8 +1063,22 @@ function copyRigForm(btn){
 
   const imgEl = document.getElementById('lightbox-img');
   const closeBtn = document.getElementById('lightbox-close');
-  function openLightbox(src, alt){ if(!src) return; imgEl.src = src; imgEl.alt = alt || ''; overlay.classList.add('show'); document.body.style.overflow = 'hidden'; }
+  function positionLightbox(){
+    /* 이 페이지가 다른 사이트에 iframe으로 삽입될 때, position:fixed는 화면(viewport)이 아니라
+       전체 문서(iframe 안쪽 스크롤 영역) 기준으로 동작해 화면 중앙이 아닌 문서 중앙에 뜰 수 있다.
+       그래서 실제로 지금 보이는 스크롤 위치(window.scrollY)를 기준으로 위치를 잡아준다. */
+    overlay.style.top = window.scrollY + 'px';
+    overlay.style.height = window.innerHeight + 'px';
+  }
+  function openLightbox(src, alt){
+    if(!src) return;
+    imgEl.src = src; imgEl.alt = alt || '';
+    positionLightbox();
+    overlay.classList.add('show'); document.body.style.overflow = 'hidden';
+  }
   function closeLightbox(){ overlay.classList.remove('show'); document.body.style.overflow = ''; imgEl.src = ''; }
+  window.addEventListener('scroll', () => { if(overlay.classList.contains('show')) positionLightbox(); });
+  window.addEventListener('resize', () => { if(overlay.classList.contains('show')) positionLightbox(); });
   document.addEventListener('click', (e) => {
     const target = e.target.closest('.portfolio-item img');
     if(target){ openLightbox(target.currentSrc || target.src, target.alt); }
