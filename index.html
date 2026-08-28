@@ -21,12 +21,12 @@
 :root{
   --black:#333333;
   --black-soft:#8f84ab;
-  --mint:#C9B6EA;
-  --mint-deep:#8F72C4;
-  --sky:#AECBF2;
-  --mint-sky:#B49CE0;
+  --mint:#D9CDF5;
+  --mint-deep:#A48FD6;
+  --sky:#FFD6E8;
+  --mint-sky:#C9B6EE;
   --cream:#FFFDFE;
-  --panel:#F5F1FC;
+  --panel:#F3EEFC;
   --ink:#333333;
   --sub:#767676;
   --line:rgba(90,84,104,.12);
@@ -42,19 +42,19 @@ body{
   font-family:'Jalnan2','Paperozi','Gowun Dodum','Pretendard',-apple-system,sans-serif;
   font-size:17px;
   color:var(--ink);
-  background:linear-gradient(165deg,#FFE5EE 0%,var(--cream) 45%,#EBF0FF 100%);
+  background:linear-gradient(165deg,#E9E1FA 0%,var(--cream) 45%,#FFD9EA 100%);
   line-height:1.85;
   word-break:keep-all;
   position:relative;
 }
 body::before{
   content:'';position:fixed;top:-160px;right:-140px;width:480px;height:480px;
-  background:radial-gradient(circle,rgba(247,185,208,.30) 0%,transparent 70%);
+  background:radial-gradient(circle,rgba(255,214,232,.35) 0%,transparent 70%);
   pointer-events:none;z-index:0;
 }
 body::after{
   content:'';position:fixed;bottom:-180px;left:-140px;width:460px;height:460px;
-  background:radial-gradient(circle,rgba(174,203,242,.30) 0%,transparent 70%);
+  background:radial-gradient(circle,rgba(217,205,245,.35) 0%,transparent 70%);
   pointer-events:none;z-index:0;
 }
 img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none;-moz-user-select:none;}
@@ -72,24 +72,24 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 .section-head{display:flex;align-items:center;gap:14px;margin-bottom:22px;}
 .section-icon{
   width:auto;height:auto;flex-shrink:0;
-  font-family:'Jalnan2',cursive;font-size:28px;line-height:1;color:#C9B6EA;
+  font-family:'Jalnan2',cursive;font-size:28px;line-height:1;color:#D9CDF5;
   text-shadow:0 0 10px rgba(155,127,209,.5);
   display:flex;align-items:center;justify-content:center;
 }
 .section-icon::before{content:'★';}
-#process .section-icon{color:#C9B6EA;text-shadow:0 0 10px rgba(155,127,209,.5);}
-#portfolio .section-icon{color:#AECBF2;text-shadow:0 0 10px rgba(127,170,224,.5);}
-#portfolio2 .section-icon{color:#F5B9D4;text-shadow:0 0 10px rgba(232,149,184,.5);}
-#notice .section-icon{color:#C9B6EA;text-shadow:0 0 10px rgba(155,127,209,.5);}
-#form .section-icon{color:#AECBF2;text-shadow:0 0 10px rgba(127,170,224,.5);}
-#faq .section-icon{color:#F5B9D4;text-shadow:0 0 10px rgba(232,149,184,.5);}
+#process .section-icon{color:#D9CDF5;text-shadow:0 0 10px rgba(155,127,209,.5);}
+#portfolio .section-icon{color:#CBD9F5;text-shadow:0 0 10px rgba(127,170,224,.5);}
+#portfolio2 .section-icon{color:#FFD6E8;text-shadow:0 0 10px rgba(232,149,184,.5);}
+#notice .section-icon{color:#D9CDF5;text-shadow:0 0 10px rgba(155,127,209,.5);}
+#form .section-icon{color:#CBD9F5;text-shadow:0 0 10px rgba(127,170,224,.5);}
+#faq .section-icon{color:#FFD6E8;text-shadow:0 0 10px rgba(232,149,184,.5);}
 .section-title{font-family:'Jalnan2',cursive;font-size:26px;font-weight:700;color:var(--black);letter-spacing:-.2px;}
 .section-sub{font-size:16px;color:var(--sub);margin:-12px 0 18px 20px;}
 
 /* ================= HERO ================= */
 .hero{
   position:relative;overflow:hidden;
-  background:linear-gradient(135deg,rgba(155,127,209,.16) 0%,rgba(127,170,224,.14) 50%,rgba(232,149,184,.16) 100%),rgba(255,255,255,.6);
+  background:linear-gradient(135deg,rgba(217,205,245,.35) 0%,rgba(255,255,255,.4) 50%,rgba(255,214,232,.35) 100%),rgba(255,255,255,.6);
   backdrop-filter:blur(22px) saturate(140%);-webkit-backdrop-filter:blur(22px) saturate(140%);
   border:1.5px solid rgba(255,255,255,.75);
   border-radius:34px;padding:52px 40px;margin-bottom:22px;color:var(--ink);
@@ -110,7 +110,7 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 .hero-badge{
   display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.22em;
   text-transform:uppercase;
-  background:rgba(255,255,255,.6);border:1px solid rgba(155,127,209,.45);color:#8F72C4;
+  background:rgba(255,255,255,.6);border:1px solid rgba(155,127,209,.45);color:#A48FD6;
   padding:7px 18px;border-radius:999px;margin-bottom:18px;
 }
 .hero h1{font-family:'Jalnan2',cursive;font-size:clamp(32px,4.6vw,44px);font-weight:700;line-height:1.4;margin:0 0 14px;color:#333333;}
@@ -182,11 +182,11 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
   display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;letter-spacing:.05em;white-space:nowrap;
   box-shadow:0 6px 14px -4px rgba(155,127,209,.6);
 }
-.process-track .process-step:nth-child(1) .process-num{background:#C9B6EA;}
-.process-track .process-step:nth-child(3) .process-num{background:#DCC3E0;}
-.process-track .process-step:nth-child(5) .process-num{background:#F5B9D4;}
-.process-track .process-step:nth-child(7) .process-num{background:#C9D6EE;}
-.process-track .process-step:nth-child(9) .process-num{background:#AECBF2;}
+.process-track .process-step:nth-child(1) .process-num{background:#D9CDF5;}
+.process-track .process-step:nth-child(3) .process-num{background:#E9D9F0;}
+.process-track .process-step:nth-child(5) .process-num{background:#FFD6E8;}
+.process-track .process-step:nth-child(7) .process-num{background:#D8E2F7;}
+.process-track .process-step:nth-child(9) .process-num{background:#CBD9F5;}
 .process-detail{margin-top:22px;border-top:1px solid var(--line);padding-top:16px;}
 .process-detail-toggle{text-align:center;font-size:16px;font-weight:700;color:var(--mint-deep);}
 .process-detail-body{margin-top:16px;background:rgba(201,182,234,.08);border-radius:16px;padding:20px;text-align:center;}
@@ -267,7 +267,7 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 .rf-ox.active{background:var(--mint-sky);color:#fff;border-color:transparent;}
 .rf-textarea{resize:vertical;min-height:70px;line-height:1.6;}
 .form-grid{display:flex;flex-direction:column;gap:20px;}
-.form-field label{display:block;font-size:16px;font-weight:800;color:var(--mint-deep);margin-bottom:8px;letter-spacing:.02em;}
+.form-field label{display:block;font-size:16px;font-weight:800;color:var(--ink);margin-bottom:8px;letter-spacing:.02em;}
 .form-field label .opt{font-weight:400;color:var(--sub);}
 .rf-text-input{
   width:100%;padding:11px 14px;border-radius:14px;border:1.5px solid var(--line);
@@ -541,31 +541,31 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
   <div class="section-head"><div class="section-icon"></div><div class="section-title">자주 묻는 질문</div></div>
   <div class="faq-list" id="faq-list">
     <details class="faq-qa">
-      <summary class="faq-q"><span class="notice-num">Q</span><span>작업 기간은 얼마나 걸리나요?</span><span class="faq-caret">›</span></summary>
+      <summary class="faq-q"><span class="notice-num">+</span><span>작업 기간은 얼마나 걸리나요?</span><span class="faq-caret">›</span></summary>
       <div class="faq-a"><span class="notice-num faq-a-mark">A</span><span>평균적으로 1일~3일 내외로 받아보실 수 있으며, 작업의 난이도와 일정에 따라 조율될 수 있습니다.</span></div>
     </details>
     <details class="faq-qa">
-      <summary class="faq-q"><span class="notice-num">Q</span><span>다른 작가분이 작업한 아바타도 수정이 가능한가요?</span><span class="faq-caret">›</span></summary>
+      <summary class="faq-q"><span class="notice-num">+</span><span>다른 작가분이 작업한 아바타도 수정이 가능한가요?</span><span class="faq-caret">›</span></summary>
       <div class="faq-a"><span class="notice-num faq-a-mark">A</span><span>이전 작가님의 허락을 받으신 경우에만 가능합니다. 단, 파일 누락이나 셰이더/애니메이션 재설정 등으로 인해 추가 비용이 발생할 수 있습니다.</span></div>
     </details>
     <details class="faq-qa">
-      <summary class="faq-q"><span class="notice-num">Q</span><span>컴퓨터 사양이 낮거나 어려워도 이용할 수 있나요?</span><span class="faq-caret">›</span></summary>
+      <summary class="faq-q"><span class="notice-num">+</span><span>컴퓨터 사양이 낮거나 어려워도 이용할 수 있나요?</span><span class="faq-caret">›</span></summary>
       <div class="faq-a"><span class="notice-num faq-a-mark">A</span><span>네, GTX 1060 등 저사양 환경에서도 세팅 경험이 있습니다! 파일만 전달해 드리는 것이 아니라 원격으로 기본 세팅과 사용법을 친절히 안내해 드립니다.</span></div>
     </details>
     <details class="faq-qa">
-      <summary class="faq-q"><span class="notice-num">Q</span><span>부스(BOOTH) 파츠는 직접 구매해서 전달해야 하나요?</span><span class="faq-caret">›</span></summary>
+      <summary class="faq-q"><span class="notice-num">+</span><span>부스(BOOTH) 파츠는 직접 구매해서 전달해야 하나요?</span><span class="faq-caret">›</span></summary>
       <div class="faq-a"><span class="notice-num faq-a-mark">A</span><span>네, 양측 구매가 원칙이며 작업자가 보유하지 않은 파일은 선물(Gift)이나 파일 형태로 전달해 주셔야 합니다.</span></div>
     </details>
     <details class="faq-qa">
-      <summary class="faq-q"><span class="notice-num">Q</span><span>유니티 패키지나 VRM 파일을 받을 수 있나요?</span><span class="faq-caret">›</span></summary>
+      <summary class="faq-q"><span class="notice-num">+</span><span>유니티 패키지나 VRM 파일을 받을 수 있나요?</span><span class="faq-caret">›</span></summary>
       <div class="faq-a"><span class="notice-num faq-a-mark">A</span><span>기본 제공은 .VSF 또는 .WARUDO 실행 파일이며, 유니티 패키지 및 VRM 파일 요청 시 추가 비용이 발생할 수 있습니다. (닐로툰 작업은 저작권 문제로 패키지 제공이 불가합니다.)</span></div>
     </details>
     <details class="faq-qa">
-      <summary class="faq-q"><span class="notice-num">Q</span><span>작업 완료 후 수정이나 환불은 어떻게 되나요?</span><span class="faq-caret">›</span></summary>
+      <summary class="faq-q"><span class="notice-num">+</span><span>작업 완료 후 수정이나 환불은 어떻게 되나요?</span><span class="faq-caret">›</span></summary>
       <div class="faq-a"><span class="notice-num faq-a-mark">A</span><span>작업자 과실이나 누락 외의 단순 변심에 의한 수정 및 환불은 어렵습니다. 작업 착수 후에는 환불이 불가하니 신중한 신청 부탁드립니다.</span></div>
     </details>
     <details class="faq-qa">
-      <summary class="faq-q"><span class="notice-num">Q</span><span>작업물은 언제까지 보관되나요?</span><span class="faq-caret">›</span></summary>
+      <summary class="faq-q"><span class="notice-num">+</span><span>작업물은 언제까지 보관되나요?</span><span class="faq-caret">›</span></summary>
       <div class="faq-a"><span class="notice-num faq-a-mark">A</span><span>기본적으로 완료 후 1개월간 보관되며, 닐로툰 등 패키지가 제공되지 않는 경우는 별도 삭제 요청이 없는 한 계속 보관해 드립니다. 장기 보관은 사전 문의해 주세요!</span></div>
     </details>
   </div>
@@ -849,7 +849,7 @@ if(MGMT_SHEET_ID){
 }
 
 /* 작업순서: "작업순서" 탭에 "번호","라벨" 열로 한 줄씩 적으면 그 순서대로 STEP이 다시 그려짐 */
-const PROCESS_NUM_COLORS = ['#C9B6EA','#DCC3E0','#F5B9D4','#C9D6EE','#AECBF2'];
+const PROCESS_NUM_COLORS = ['#D9CDF5','#E9D9F0','#FFD6E8','#D8E2F7','#CBD9F5'];
 function renderProcessRows(rows){
   const wrap = document.getElementById('process-track');
   if(!wrap || !rows.length) return;
@@ -905,7 +905,7 @@ function renderFaqRows(rows){
   if(!wrap || !rows.length) return;
   wrap.innerHTML = rows.map(row => `
     <details class="faq-qa">
-      <summary class="faq-q"><span class="notice-num">Q</span><span>${escapeHtml(row['질문'] || '')}</span><span class="faq-caret">›</span></summary>
+      <summary class="faq-q"><span class="notice-num">+</span><span>${escapeHtml(row['질문'] || '')}</span><span class="faq-caret">›</span></summary>
       <div class="faq-a"><span class="notice-num faq-a-mark">A</span><span>${escapeHtml(row['답변'] || '')}</span></div>
     </details>`).join('');
 }
