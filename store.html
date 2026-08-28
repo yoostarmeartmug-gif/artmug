@@ -534,7 +534,7 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 
 <!-- ============ 자주묻는질문 ============ -->
 <section class="section" id="faq">
-  <div class="section-head"><div class="section-icon"></div><div class="section-title">자주묻는질문</div></div>
+  <div class="section-head"><div class="section-icon"></div><div class="section-title">자주 묻는 질문</div></div>
   <div class="faq-list" id="faq-list">
     <details class="faq-qa">
       <summary class="faq-q"><span class="notice-num">Q</span><span>작업 기간은 얼마나 걸리나요?</span><span class="faq-caret">›</span></summary>
@@ -756,15 +756,12 @@ function csvRowsToObjects(rows){
     });
 }
 /* 구글 시트에서 한 셀에 줄바꿈 대신 다음 행으로 내용이 이어져 입력된 경우를 자동으로 합쳐준다.
-   (keyCol이 비어있는 행은 바로 위 행의 valCol에 줄바꿈으로 이어붙임) */
+   (keyCol이나 valCol 어느 칸에 이어지는 텍스트가 들어와도 바로 앞 항목의 내용 뒤에 줄바꿈으로 붙임) */
 function mergeContinuationRows(rows, keyCol, valCol){
   const merged = [];
   rows.forEach(row => {
     const val = (row[valCol] || '').trim();
     const key = (row[keyCol] || '').trim();
-    /* 내용(valCol) 칸이 비어있으면 이어지는 줄로 보고, 항목(keyCol)이나 내용 어디에 텍스트가 있든
-       그걸 바로 앞 항목의 내용 뒤에 줄바꿈으로 붙인다. (시트에서 한 셀 안 줄바꿈이 다음 행의
-       항목 칸으로 밀려 들어가는 경우까지 함께 처리) */
     if(!val && merged.length){
       const extra = key || val;
       if(extra){
