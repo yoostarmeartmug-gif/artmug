@@ -131,8 +131,8 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 
 /* ================= 공지사항 ================= */
 .notice-alert{
-  border:1.5px dashed var(--mint-deep);background:rgba(201,182,234,.18);border-radius:18px;
-  padding:16px 20px;margin-bottom:16px;text-align:center;font-size:16px;font-weight:800;color:var(--mint-deep);line-height:1.8;
+  border:1.5px dashed #E87FAE;background:rgba(242,160,193,.14);border-radius:18px;
+  padding:16px 20px;margin-bottom:16px;text-align:center;font-size:16px;font-weight:800;color:#E87FAE;line-height:1.8;
 }
 .notice-alert-mark{color:#F2A0C1;}
 @media (max-width:600px){.notice-alert{font-size:13.5px;}}
@@ -186,7 +186,6 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
   width:auto;height:auto;border-radius:999px;margin:0 0 10px;padding:8px 16px;
   background:var(--mint-sky);color:#fff;font-family:'Jalnan2',cursive;
   display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;letter-spacing:.05em;white-space:nowrap;
-  box-shadow:0 6px 14px -4px rgba(155,127,209,.6);
 }
 .process-track .process-step:nth-child(1) .process-num{background:#D9CDF5;}
 .process-track .process-step:nth-child(3) .process-num{background:#E9D9F0;}
@@ -345,11 +344,14 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
   .process-arrow{font-size:15px;}
 }
 @media (max-width:600px){
-  .process-track{flex-direction:column;align-items:center;row-gap:6px;}
-  .process-step{width:100%;max-width:180px;margin:0 auto;flex-direction:row;justify-content:flex-start;align-items:center;gap:14px;}
-  .process-step .process-num{margin:0;flex:0 0 auto;}
-  .process-step .process-label{text-align:left;}
-  .process-arrow{width:auto;height:auto;transform:rotate(90deg);opacity:.5;}
+  .process-track{
+    display:grid;grid-template-columns:44px 1fr;align-items:center;
+    row-gap:10px;column-gap:14px;width:auto;max-width:200px;margin:0 auto;
+  }
+  .process-step{display:contents;}
+  .process-step .process-num{grid-column:1;justify-self:center;margin:0;}
+  .process-step .process-label{grid-column:2;justify-self:start;text-align:left;}
+  .process-arrow{grid-column:1;justify-self:center;width:auto;height:auto;transform:rotate(90deg);opacity:.5;}
 }
 </style>
 </head>
