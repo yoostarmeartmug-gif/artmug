@@ -42,7 +42,7 @@ body{
   font-family:'Jalnan2','Paperozi','Gowun Dodum','Pretendard',-apple-system,sans-serif;
   font-size:17px;
   color:var(--ink);
-  background:linear-gradient(165deg,#E9E1FA 0%,var(--cream) 45%,#FFD9EA 100%);
+  background:linear-gradient(165deg,#EDF1FF 0%,#F6F1FB 45%,#FFEFF4 100%);
   line-height:1.85;
   word-break:keep-all;
   position:relative;
@@ -73,16 +73,15 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 .section-icon{
   width:auto;height:auto;flex-shrink:0;
   font-family:'Jalnan2',cursive;font-size:28px;line-height:1;color:#D9CDF5;
-  text-shadow:0 0 10px rgba(155,127,209,.5);
   display:flex;align-items:center;justify-content:center;
 }
 .section-icon::before{content:'★';}
-#process .section-icon{color:#D9CDF5;text-shadow:0 0 10px rgba(155,127,209,.5);}
-#portfolio .section-icon{color:#CBD9F5;text-shadow:0 0 10px rgba(127,170,224,.5);}
-#portfolio2 .section-icon{color:#FFD6E8;text-shadow:0 0 10px rgba(232,149,184,.5);}
-#notice .section-icon{color:#D9CDF5;text-shadow:0 0 10px rgba(155,127,209,.5);}
-#form .section-icon{color:#CBD9F5;text-shadow:0 0 10px rgba(127,170,224,.5);}
-#faq .section-icon{color:#FFD6E8;text-shadow:0 0 10px rgba(232,149,184,.5);}
+#process .section-icon{color:#D9CDF5;}
+#portfolio .section-icon{color:#CBD9F5;}
+#portfolio2 .section-icon{color:#FFD6E8;}
+#notice .section-icon{color:#D9CDF5;}
+#form .section-icon{color:#CBD9F5;}
+#faq .section-icon{color:#FFD6E8;}
 .section-title{font-family:'Jalnan2',cursive;font-size:26px;font-weight:700;color:var(--black);letter-spacing:-.2px;}
 .section-sub{font-size:16px;color:var(--sub);margin:-12px 0 18px 20px;}
 
@@ -238,13 +237,19 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 .portfolio-row.drag-scroll{cursor:grab;}
 .portfolio-row.drag-scroll.dragging{cursor:grabbing;user-select:none;}
 .portfolio-item{
-  flex:0 0 auto;width:220px;height:220px;border-radius:22px;overflow:hidden;position:relative;
+  flex:0 0 auto;width:220px;border-radius:22px;overflow:hidden;position:relative;
   background:var(--panel);border:1.5px solid rgba(255,255,255,.8);box-shadow:0 10px 24px -14px rgba(160,140,190,.4);
   transition:transform .25s ease, box-shadow .25s ease;
+  display:flex;flex-direction:column;
 }
 .portfolio-item:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 18px 34px -14px rgba(160,140,190,.5);}
+.portfolio-item-media{width:220px;height:220px;flex:0 0 auto;}
 .portfolio-item video,.portfolio-item img,.portfolio-item iframe{width:100%;height:100%;object-fit:cover;display:block;border:none;}
-.portfolio-item.pending{display:flex;align-items:center;justify-content:center;color:var(--sub);font-size:12px;font-weight:700;text-align:center;padding:8px;}
+.portfolio-caption{
+  padding:10px 12px;text-align:center;font-size:13px;font-weight:700;color:var(--ink);
+  background:rgba(255,255,255,.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.portfolio-item.pending{height:220px;display:flex;align-items:center;justify-content:center;color:var(--sub);font-size:12px;font-weight:700;text-align:center;padding:8px;}
 .portfolio-group{margin-bottom:22px;}
 .portfolio-group:last-child{margin-bottom:0;}
 .portfolio-group-title{font-family:'Jalnan2',cursive;font-size:20px;font-weight:700;color:var(--mint-deep);margin-bottom:10px;}
@@ -389,7 +394,7 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
   <div id="portfolio-groups">
     <div class="portfolio-panel active" data-tab="닐로툰">
       <div class="portfolio-row drag-scroll">
-        <div class="portfolio-item"><img src="./포트폴리오닐로툰/mico_021.png" alt="닐로툰" loading="lazy"></div>
+        <div class="portfolio-item"><div class="portfolio-item-media"><img src="./포트폴리오닐로툰/mico_021.png" alt="닐로툰" loading="lazy"></div><div class="portfolio-caption">닐로툰 완성작</div></div>
       </div>
     </div>
     <div class="portfolio-panel" data-tab="버츄얼">
@@ -399,8 +404,8 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
     </div>
     <div class="portfolio-panel" data-tab="API">
       <div class="portfolio-row drag-scroll">
-        <div class="portfolio-item"><img src="./포트폴리오API/17491688160.gif" alt="API" loading="lazy"></div>
-        <div class="portfolio-item"><img src="./포트폴리오API/17491688810.gif" alt="API" loading="lazy"></div>
+        <div class="portfolio-item"><div class="portfolio-item-media"><img src="./포트폴리오API/17491688160.gif" alt="API" loading="lazy"></div><div class="portfolio-caption">API 완성작</div></div>
+        <div class="portfolio-item"><div class="portfolio-item-media"><img src="./포트폴리오API/17491688810.gif" alt="API" loading="lazy"></div><div class="portfolio-caption">API 완성작</div></div>
       </div>
     </div>
     <div class="portfolio-panel" data-tab="퀄리티업">
@@ -695,22 +700,55 @@ function parsePortfolioCsv(text){
     const title = (row['제목'] || '').trim();
     const link = (row['링크'] || '').trim();
     const group = (row['구분'] || '').trim();
+    const desc = (row['설명'] || '').trim();
     if(!link) return null;
-    return { title, link, group };
+    return { title, link, group, desc };
   }).filter(Boolean);
 }
-function portfolioItemHtml({ title, link }){
+function portfolioItemHtml({ title, link, desc }){
   const clean = link.split('?')[0];
   const safeLink = escapeHtml(link);
+  const safeTitle = escapeHtml(title || '');
+  const captionText = (desc || title || '').trim();
+  const caption = captionText ? `<div class="portfolio-caption">${escapeHtml(captionText)}</div>` : '';
   const youtubeId = getYoutubeId(link);
   if(youtubeId){
-    return `<div class="portfolio-item"><iframe src="https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1" title="${escapeHtml(title)}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
+    return `<div class="portfolio-item"><div class="portfolio-item-media"><iframe src="https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1" title="${safeTitle}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>${caption}</div>`;
   }
   if(/\.(mp4|webm|mov|mkv)$/i.test(clean)){
-    return `<div class="portfolio-item"><video autoplay loop muted playsinline><source src="${safeLink}"></video></div>`;
+    return `<div class="portfolio-item"><div class="portfolio-item-media"><video autoplay loop muted playsinline><source src="${safeLink}"></video></div>${caption}</div>`;
   }
   /* png, jpg, gif(움짤 포함) 등은 전부 img 태그로 처리 — gif는 img로 넣어도 애니메이션이 그대로 재생됩니다 */
-  return `<div class="portfolio-item"><img src="${safeLink}" alt="${escapeHtml(title)}" loading="lazy"></div>`;
+  return `<div class="portfolio-item"><div class="portfolio-item-media"><img src="${safeLink}" alt="${safeTitle}" loading="lazy"></div>${caption}</div>`;
+}
+function ensurePortfolioTab(wrapId, group){
+  const wrap = document.getElementById(wrapId);
+  if(!wrap) return null;
+  let panel = Array.prototype.find.call(wrap.querySelectorAll('.portfolio-panel'), p => p.dataset.tab === group);
+  if(panel) return panel;
+  /* 시트의 "구분"에 새로운 값이 있으면, 탭 버튼과 패널을 자동으로 새로 만든다 */
+  const tabsWrap = wrap.previousElementSibling;
+  if(tabsWrap && tabsWrap.classList.contains('portfolio-tabs')){
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'tab-btn';
+    btn.dataset.tab = group;
+    btn.textContent = group;
+    tabsWrap.appendChild(btn);
+    bindPortfolioTabButton(btn, tabsWrap, wrap);
+  }
+  panel = document.createElement('div');
+  panel.className = 'portfolio-panel';
+  panel.dataset.tab = group;
+  wrap.appendChild(panel);
+  return panel;
+}
+function bindPortfolioTabButton(btn, tabsWrap, panelWrap){
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    tabsWrap.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+    panelWrap.querySelectorAll('.portfolio-panel').forEach(p => p.classList.toggle('active', p.dataset.tab === tab));
+  });
 }
 function renderPortfolio(items, wrapId){
   const wrap = document.getElementById(wrapId);
@@ -722,7 +760,7 @@ function renderPortfolio(items, wrapId){
     (byGroup[g] = byGroup[g] || []).push(it);
   });
   Object.keys(byGroup).forEach(g => {
-    const panel = Array.prototype.find.call(wrap.querySelectorAll('.portfolio-panel'), p => p.dataset.tab === g);
+    const panel = ensurePortfolioTab(wrapId, g);
     if(!panel) return;
     panel.innerHTML = `<div class="portfolio-row drag-scroll"></div>`;
     const row = panel.querySelector('.portfolio-row');
@@ -790,7 +828,7 @@ function renderFolderPortfolio(map, wrapId){
       if(!panel) return;
       const row = document.createElement('div');
       row.className = 'portfolio-row drag-scroll';
-      row.innerHTML = media.map(f => portfolioItemHtml({ title: tab, link: f.download_url })).join('');
+      row.innerHTML = media.map(f => portfolioItemHtml({ title: f.name.replace(/\.[^.]+$/, ''), link: f.download_url })).join('');
       panel.innerHTML = '';
       panel.appendChild(row);
       makeDragScroll(row);
