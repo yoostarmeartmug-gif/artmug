@@ -920,7 +920,15 @@ if(MGMT_SHEET_ID){
 }
 
 /* 기본정보: "기본정보" 탭에 "항목","내용" 열로 아래 항목명을 그대로 적으면 해당 위치가 교체됨
-   항목명: 이름 / 소개 / 태그1 / 태그2 / 태그3 / 태그4 / 신청양식안내 / 공지사항안내 */
+   항목명: 이름 / 소개 / 태그1 / 태그2 / 태그3 / 태그4 / 태그5... (몇 개든 추가 가능) / 신청양식안내 / 공지사항안내
+   태그 색상은 아래 HERO_TAG_COLORS 목록을 순서대로 반복해서 사용 (5개 넘으면 처음 색부터 다시 반복) */
+const HERO_TAG_COLORS = [
+  'border-color:rgba(155,127,209,.3);color:#B6A2DD;background:rgba(155,127,209,.06);',
+  'border-color:rgba(140,140,220,.3);color:#A6A6E0;background:rgba(140,140,220,.06);',
+  'border-color:rgba(127,170,224,.3);color:#A9C4E8;background:rgba(127,170,224,.06);',
+  'border-color:rgba(122,190,150,.3);color:#A4D4B7;background:rgba(122,190,150,.06);',
+  'border-color:rgba(224,150,180,.3);color:#E0A0C0;background:rgba(224,150,180,.06);'
+];
 function renderBasicInfo(rows){
   const map = {};
   rows.forEach(r => { map[(r['항목'] || '').trim()] = r['내용'] || ''; });
@@ -933,8 +941,17 @@ function renderBasicInfo(rows){
   }
   const tagWrap = document.getElementById('hero-tags');
   if(tagWrap){
-    const tags = ['태그1','태그2','태그3','태그4'].map(k => map[k]).filter(v => v && v.trim() !== '');
-    if(tags.length) tagWrap.innerHTML = tags.map(t => `<span class="hero-tag">${escapeHtml(t)}</span>`).join('');
+    /* 태그1, 태그2, 태그3... 몇 개든 순서대로 다 인식한다 (숫자가 이어지는 동안 계속 읽음, 최대 30개) */
+    const tags = [];
+    for(let i = 1; i <= 30; i++){
+      const key = '태그' + i;
+      if(map[key] === undefined) break;
+      const v = map[key].trim();
+      if(v) tags.push(v);
+    }
+    if(tags.length){
+      tagWrap.innerHTML = tags.map((t, i) => `<span class="hero-tag" style="${HERO_TAG_COLORS[i % HERO_TAG_COLORS.length]}">${escapeHtml(t)}</span>`).join('');
+    }
   }
   if(map['신청양식안내']){
     const n = document.getElementById('form-note-box'); if(n) n.innerHTML = nl2br(map['신청양식안내']);
