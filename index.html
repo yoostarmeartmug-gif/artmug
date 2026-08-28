@@ -197,13 +197,12 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 .process-label{font-family:'Jalnan2',cursive;font-size:18px;color:var(--ink);font-weight:700;line-height:1.4;white-space:nowrap;}
 
 /* ================= 자주묻는질문 ================= */
-.faq-list{display:flex;flex-direction:column;gap:14px;}
+.faq-list{display:flex;flex-direction:column;gap:8px;}
 .faq-qa{
-  border:1px solid var(--line);border-radius:16px;margin-bottom:12px;
+  border:1px solid var(--line);border-radius:16px;margin-bottom:0;
   background:rgba(255,255,255,.55);transition:background .2s ease, box-shadow .2s ease;
   overflow:hidden;
 }
-.faq-qa:last-child{margin-bottom:0;}
 .faq-qa:hover{background:rgba(201,182,234,.12);}
 .faq-qa[open]{background:rgba(201,182,234,.16);box-shadow:0 10px 24px -14px rgba(160,140,190,.5);}
 .faq-q{
@@ -212,8 +211,13 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 }
 .faq-q::-webkit-details-marker{display:none;}
 .faq-q span:nth-child(2){flex:1;}
-.faq-caret{flex:0 0 auto;color:var(--mint-deep);font-size:20px;font-weight:800;transition:transform .25s ease;}
-.faq-qa[open] .faq-caret{transform:rotate(90deg);}
+.faq-caret{
+  flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:rgba(201,182,234,.25);
+  color:var(--mint-deep);font-size:15px;font-weight:800;transition:transform .25s ease, background .25s ease;
+  display:flex;align-items:center;justify-content:center;
+}
+.faq-qa:hover .faq-caret{background:rgba(201,182,234,.45);}
+.faq-qa[open] .faq-caret{transform:rotate(90deg);background:var(--mint-sky);color:#fff;}
 .faq-a{display:flex;gap:12px;align-items:flex-start;font-size:16px;color:var(--sub);padding:0 18px 18px;}
 .faq-a-mark{background:var(--sky);box-shadow:0 4px 10px -3px rgba(174,203,242,.7);}
 
@@ -740,6 +744,55 @@ if(PORTFOLIO2_CSV_URL){
     .then(text => renderPortfolio(parsePortfolioCsv(text), 'portfolio2-groups'))
     .catch(() => {});
 }
+
+/* ================= 포트폴리오 - 깃허브 폴더 자동 연동 (구글 시트 없이) =================
+   같은 깃허브 저장소 안의 폴더에 사진/영상 파일을 넣기만 하면 자동으로 그 탭에 나타난다.
+   폴더 안에 파일이 하나도 없으면(안내용 텍스트 파일만 있으면) 기존 "준비중" 표시를 그대로 둔다. */
+const GITHUB_OWNER = 'yoostarmeartmug-gif';
+const GITHUB_REPO = 'artmug';
+const GITHUB_BRANCH = 'main';
+const PORTFOLIO_FOLDER_MAP = {
+  '닐로툰': '포트폴리오닐로툰',
+  '버츄얼': '포트폴리오버츄얼',
+  'API': '포트폴리오API',
+  '퀄리티업': '포트폴리오퀄리티업',
+  'VR챗': '포트폴리오VR챗'
+};
+const PORTFOLIO2_FOLDER_MAP = {
+  '보유중 아바타': '포트폴리오2보유중아바타',
+  '개인작 판매': '포트폴리오2개인작판매'
+};
+function isMediaFileName(name){
+  return /\.(png|jpe?g|gif|webp|mp4|webm|mov|mkv)$/i.test(name);
+}
+function fetchGithubFolder(folder){
+  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(folder)}?ref=${GITHUB_BRANCH}`;
+  return fetch(url)
+    .then(res => res.ok ? res.json() : [])
+    .catch(() => []);
+}
+function renderFolderPortfolio(map, wrapId){
+  const wrap = document.getElementById(wrapId);
+  if(!wrap) return;
+  Object.keys(map).forEach(tab => {
+    const folder = map[tab];
+    fetchGithubFolder(folder).then(files => {
+      if(!Array.isArray(files)) return;
+      const media = files.filter(f => f && f.type === 'file' && isMediaFileName(f.name));
+      if(!media.length) return; /* 실제 사진/영상이 없으면 기존 "준비중" 상태를 그대로 둔다 */
+      const panel = Array.prototype.find.call(wrap.querySelectorAll('.portfolio-panel'), p => p.dataset.tab === tab);
+      if(!panel) return;
+      const row = document.createElement('div');
+      row.className = 'portfolio-row drag-scroll';
+      row.innerHTML = media.map(f => portfolioItemHtml({ title: tab, link: f.download_url })).join('');
+      panel.innerHTML = '';
+      panel.appendChild(row);
+      makeDragScroll(row);
+    });
+  });
+}
+renderFolderPortfolio(PORTFOLIO_FOLDER_MAP, 'portfolio-groups');
+renderFolderPortfolio(PORTFOLIO2_FOLDER_MAP, 'portfolio2-groups');
 
 /* ================= 공지사항 - 관리시트 탭 연동 =================
    같은 관리시트(MGMT_SHEET_ID) 안에 "공지사항" 탭을 만들어두면, 탭 이름으로 CSV를 읽어와서 공지사항을 다시 그린다.
