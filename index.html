@@ -1055,6 +1055,7 @@ function copyRigForm(btn){
       <div class="lightbox-stage">
         <div class="lightbox-gif-badge" id="lightbox-gif-badge">GIF</div>
         <img id="lightbox-img" src="" alt="">
+        <video id="lightbox-video" src="" controls autoplay loop playsinline></video>
         <div class="lightbox-caption" id="lightbox-caption"></div>
       </div>
       <button type="button" class="lightbox-nav lightbox-next" id="lightbox-next" aria-label="다음"><span>›</span></button>
@@ -1064,7 +1065,7 @@ function copyRigForm(btn){
   document.body.appendChild(overlay);
   const style = document.createElement('style');
   style.textContent = `
-    .portfolio-item img{cursor:zoom-in;}
+    .portfolio-item img,.portfolio-item video{cursor:zoom-in;}
     .lightbox-overlay{
       position:absolute;left:0;width:100%;background:rgba(90,84,104,.55);z-index:999;
       display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px;
@@ -1073,7 +1074,8 @@ function copyRigForm(btn){
     .lightbox-overlay.show{display:flex;opacity:1;}
     .lightbox-frame{position:relative;display:flex;align-items:center;justify-content:center;gap:14px;max-width:min(92vw,820px);width:100%;}
     .lightbox-stage{position:relative;display:flex;flex-direction:column;align-items:center;min-width:0;flex:1;}
-    .lightbox-overlay img{max-width:100%;max-height:480px;width:auto;height:auto;object-fit:contain;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.35);cursor:default;user-select:none;-webkit-user-drag:none;background:#111;}
+    .lightbox-overlay img,.lightbox-overlay video{max-width:100%;max-height:480px;width:auto;height:auto;object-fit:contain;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.35);cursor:default;user-select:none;-webkit-user-drag:none;background:#111;}
+    .lightbox-overlay video{display:none;}
     .lightbox-gif-badge{position:absolute;top:14px;left:14px;background:rgba(30,30,35,.75);color:#fff;font-size:11px;font-weight:800;letter-spacing:.05em;padding:4px 10px;border-radius:8px;display:none;}
     .lightbox-caption{
       margin-top:16px;background:rgba(255,255,255,.92);color:var(--ink);font-size:14px;font-weight:700;
@@ -1098,7 +1100,7 @@ function copyRigForm(btn){
       position:relative;flex:0 0 auto;width:56px;height:56px;border-radius:12px;overflow:hidden;
       border:2px solid transparent;cursor:pointer;opacity:.65;transition:opacity .2s ease, border-color .2s ease;background:#111;
     }
-    .lightbox-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+    .lightbox-thumb img,.lightbox-thumb video{width:100%;height:100%;object-fit:cover;display:block;}
     .lightbox-thumb.active{opacity:1;border-color:#fff;}
     .lightbox-thumb-badge{position:absolute;bottom:2px;right:2px;background:rgba(30,30,35,.8);color:#fff;font-size:8px;font-weight:800;padding:1px 4px;border-radius:5px;}
     @media (max-width:600px){
@@ -1110,6 +1112,7 @@ function copyRigForm(btn){
   document.head.appendChild(style);
 
   const imgEl = document.getElementById('lightbox-img');
+  const videoEl = document.getElementById('lightbox-video');
   const captionEl = document.getElementById('lightbox-caption');
   const gifBadge = document.getElementById('lightbox-gif-badge');
   const closeBtn = document.getElementById('lightbox-close');
@@ -1142,12 +1145,13 @@ function copyRigForm(btn){
   }
 
   function isGifSrc(src){ return /\.gif(\?|$)/i.test(src || ''); }
+  function isVideoSrc(src){ return /\.(mp4|webm|mov|mkv)(\?|$)/i.test(src || ''); }
 
   function renderThumbs(){
     thumbsWrap.innerHTML = gallery.map((item, i) => `
       <div class="lightbox-thumb${i === currentIndex ? ' active' : ''}" data-index="${i}">
-        <img src="${item.src}" alt="">
-        ${isGifSrc(item.src) ? '<span class="lightbox-thumb-badge">GIF</span>' : ''}
+        ${item.isVideo ? `<video src="${item.src}" muted playsinline></video>` : `<img src="${item.src}" alt="">`}
+        ${item.isVideo ? '<span class="lightbox-thumb-badge">VIDEO</span>' : (isGifSrc(item.src) ? '<span class="lightbox-thumb-badge">GIF</span>' : '')}
       </div>`).join('');
     thumbsWrap.querySelectorAll('.lightbox-thumb').forEach(el => {
       el.addEventListener('click', () => showIndex(parseInt(el.dataset.index, 10)));
@@ -1158,11 +1162,14 @@ function copyRigForm(btn){
     if(!gallery.length) return;
     currentIndex = (i + gallery.length) % gallery.length;
     const item = gallery[currentIndex];
-    imgEl.src = item.src;
-    imgEl.alt = item.caption || '';
+    if(item.isVideo){
+      videoEl.src = item.src; videoEl.style.display = ''; imgEl.style.display = 'none'; imgEl.src = '';
+    } else {
+      imgEl.src = item.src; imgEl.style.display = ''; videoEl.style.display = 'none'; videoEl.src = '';
+    }
     captionEl.textContent = item.caption || '';
     captionEl.style.display = item.caption ? '' : 'none';
-    gifBadge.style.display = isGifSrc(item.src) ? '' : 'none';
+    gifBadge.style.display = (!item.isVideo && isGifSrc(item.src)) ? '' : 'none';
     prevBtn.style.display = gallery.length > 1 ? '' : 'none';
     nextBtn.style.display = gallery.length > 1 ? '' : 'none';
     thumbsWrap.style.display = gallery.length > 1 ? '' : 'none';
@@ -1174,23 +1181,28 @@ function copyRigForm(btn){
   }
 
   function openLightbox(anchorEl){
-    /* 클릭한 썸네일과 같은 포트폴리오 줄(row) 안에 있는 이미지들을 모아 갤러리로 만든다 */
+    /* 클릭한 썸네일과 같은 포트폴리오 줄(row) 안에 있는 이미지/영상들을 모아 갤러리로 만든다 */
     const row = anchorEl.closest('.portfolio-row') || anchorEl.parentElement;
-    const imgs = row ? Array.prototype.slice.call(row.querySelectorAll('.portfolio-item img')) : [anchorEl];
-    gallery = imgs.map(img => {
-      const captionNode = img.closest('.portfolio-item')?.querySelector('.portfolio-caption');
-      return { src: img.currentSrc || img.src, caption: captionNode ? captionNode.textContent.trim() : (img.alt || '') };
+    const els = row ? Array.prototype.slice.call(row.querySelectorAll('.portfolio-item img, .portfolio-item video')) : [anchorEl];
+    gallery = els.map(el => {
+      const isVideo = el.tagName === 'VIDEO';
+      const captionNode = el.closest('.portfolio-item')?.querySelector('.portfolio-caption');
+      const src = isVideo ? (el.currentSrc || el.querySelector('source')?.src || el.src) : (el.currentSrc || el.src);
+      return { src, isVideo, caption: captionNode ? captionNode.textContent.trim() : (el.alt || '') };
     });
-    const startIndex = imgs.indexOf(anchorEl);
+    const startIndex = els.indexOf(anchorEl);
     renderThumbs();
     showIndex(startIndex >= 0 ? startIndex : 0);
     positionLightbox(anchorEl);
     overlay.classList.add('show'); document.body.style.overflow = 'hidden';
   }
-  function closeLightbox(){ overlay.classList.remove('show'); document.body.style.overflow = ''; imgEl.src = ''; }
+  function closeLightbox(){
+    overlay.classList.remove('show'); document.body.style.overflow = '';
+    imgEl.src = ''; videoEl.pause(); videoEl.src = '';
+  }
 
   document.addEventListener('click', (e) => {
-    const target = e.target.closest('.portfolio-item img');
+    const target = e.target.closest('.portfolio-item img, .portfolio-item video');
     if(target){ openLightbox(target); }
   });
   closeBtn.addEventListener('click', closeLightbox);
