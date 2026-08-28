@@ -340,7 +340,7 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
     <span class="hero-badge">VIRTUAL AVATAR ARTIST</span>
     <h1 id="hero-title">유별나</h1>
     <p id="hero-desc">안녕하세요 버츄얼 아바타 작가 유별나입니다.<br>항상 모든 작업을 최선을 다하며, 정성스럽게 작업합니다.</p>
-    <div class="hero-tags"><span class="hero-tag">버츄얼 아바타</span><span class="hero-tag">일러스트</span><span class="hero-tag">모델링</span><span class="hero-tag">퀄리티업</span></div>
+    <div class="hero-tags" id="hero-tags"><span class="hero-tag">버츄얼 아바타</span><span class="hero-tag">일러스트</span><span class="hero-tag">모델링</span><span class="hero-tag">퀄리티업</span></div>
   </div>
 </header>
 
@@ -359,7 +359,7 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
     <div class="process-step"><div class="process-num">05</div><div class="process-label">완성/전달</div></div>
   </div>
   <div class="process-detail">
-    <div class="process-detail-body">
+    <div class="process-detail-body" id="process-detail-body">
       <p>빠른마감 옵션은 따로 만들지 않았습니다.<br>작업은 결제 &gt; 피드백 순서 대로 진행되며, <strong>평균 1~3일 안에 받아보실 수 있습니다!</strong></p>
       <p>저사양이거나 어려워서 와루도 고민이시라면, <strong>걱정마세요!</strong><br><strong>1060 그래픽카드에서도 세팅 경험 있습니다!</strong> 사용방법도 어렵지 않아요!<br>저는 단순히 파일만 뽑아 드리는 것이 아닌,<br>방송에서 <strong>실사용하실 수 있게 원격으로 기본세팅과 사용설명</strong> 해드리고 있어요!</p>
     </div>
@@ -484,13 +484,13 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
       </div>
     </div>
   </div>
-  <div class="notice-footer">위 내용을 확인하시고 동의하신 후 문의 및 결제를 진행해 주세요.<br>감사합니다.</div>
+  <div class="notice-footer" id="notice-footer">위 내용을 확인하시고 동의하신 후 문의 및 결제를 진행해 주세요.<br>감사합니다.</div>
 </section>
 
 <!-- ============ 신청양식 ============ -->
 <section class="section" id="form">
   <div class="section-head"><div class="section-icon"></div><div class="section-title">문의 양식 작성 및 복사</div></div>
-  <div class="form-note-box">스케줄 및 슬롯 관리에 따라 일부 작업은 조율이 필요할 수 있으니,<br>궁금하신 점은 편하게 먼저 문의해 주세요!</div>
+  <div class="form-note-box" id="form-note-box">스케줄 및 슬롯 관리에 따라 일부 작업은 조율이 필요할 수 있으니,<br>궁금하신 점은 편하게 먼저 문의해 주세요!</div>
 
   <div class="form-grid">
     <div class="form-field">
@@ -702,13 +702,23 @@ function portfolioItemHtml({ title, link }){
   /* png, jpg, gif(움짤 포함) 등은 전부 img 태그로 처리 — gif는 img로 넣어도 애니메이션이 그대로 재생됩니다 */
   return `<div class="portfolio-item"><img src="${safeLink}" alt="${escapeHtml(title)}" loading="lazy"></div>`;
 }
-function renderPortfolio(items, rowId, wrapId){
+function renderPortfolio(items, wrapId){
   const wrap = document.getElementById(wrapId);
   if(!wrap || !items.length) return;
-  wrap.innerHTML = `<div class="portfolio-row drag-scroll" id="${rowId}"></div>`;
-  const row = document.getElementById(rowId);
-  row.innerHTML = items.map(portfolioItemHtml).join('');
-  makeDragScroll(row);
+  const byGroup = {};
+  items.forEach(it => {
+    const g = (it.group || '').trim();
+    if(!g) return;
+    (byGroup[g] = byGroup[g] || []).push(it);
+  });
+  Object.keys(byGroup).forEach(g => {
+    const panel = Array.prototype.find.call(wrap.querySelectorAll('.portfolio-panel'), p => p.dataset.tab === g);
+    if(!panel) return;
+    panel.innerHTML = `<div class="portfolio-row drag-scroll"></div>`;
+    const row = panel.querySelector('.portfolio-row');
+    row.innerHTML = byGroup[g].map(portfolioItemHtml).join('');
+    makeDragScroll(row);
+  });
 }
 function makeDragScroll(row){
   let dragging = false, startX = 0, startScroll = 0, moved = false;
@@ -721,13 +731,13 @@ function makeDragScroll(row){
 if(PORTFOLIO_CSV_URL){
   fetch(PORTFOLIO_CSV_URL)
     .then(res => res.text())
-    .then(text => renderPortfolio(parsePortfolioCsv(text), 'portfolio-row', 'portfolio-groups'))
+    .then(text => renderPortfolio(parsePortfolioCsv(text), 'portfolio-groups'))
     .catch(() => {});
 }
 if(PORTFOLIO2_CSV_URL){
   fetch(PORTFOLIO2_CSV_URL)
     .then(res => res.text())
-    .then(text => renderPortfolio(parsePortfolioCsv(text), 'portfolio2-row', 'portfolio2-groups'))
+    .then(text => renderPortfolio(parsePortfolioCsv(text), 'portfolio2-groups'))
     .catch(() => {});
 }
 
@@ -744,6 +754,22 @@ function csvRowsToObjects(rows){
       header.forEach((h, i) => { obj[h] = String(r[i] || '').trim(); });
       return obj;
     });
+}
+/* 구글 시트에서 한 셀에 줄바꿈 대신 다음 행으로 내용이 이어져 입력된 경우를 자동으로 합쳐준다.
+   (keyCol이 비어있는 행은 바로 위 행의 valCol에 줄바꿈으로 이어붙임) */
+function mergeContinuationRows(rows, keyCol, valCol){
+  const merged = [];
+  rows.forEach(row => {
+    const key = (row[keyCol] || '').trim();
+    if(!key && merged.length){
+      const prev = merged[merged.length - 1];
+      const extra = (row[valCol] || '').trim();
+      if(extra) prev[valCol] = (prev[valCol] || '') + '\n' + extra;
+    } else {
+      merged.push(Object.assign({}, row));
+    }
+  });
+  return merged;
 }
 function fetchSheetRows(sheetName){
   return fetch(sheetCsvUrl(sheetName))
@@ -763,7 +789,7 @@ function renderNoticeRows(rows){
 }
 
 if(MGMT_SHEET_ID){
-  fetchSheetRows('공지사항').then(renderNoticeRows).catch(() => {});
+  fetchSheetRows('공지사항').then(rows => renderNoticeRows(mergeContinuationRows(rows, '제목', '내용'))).catch(() => {});
 }
 
 /* 작업순서: "작업순서" 탭에 "번호","라벨" 열로 한 줄씩 적으면 그 순서대로 STEP이 다시 그려짐 */
@@ -780,6 +806,55 @@ function renderProcessRows(rows){
 }
 if(MGMT_SHEET_ID){
   fetchSheetRows('작업순서').then(renderProcessRows).catch(() => {});
+}
+
+/* 기본정보: "기본정보" 탭에 "항목","내용" 열로 아래 항목명을 그대로 적으면 해당 위치가 교체됨
+   항목명: 이름 / 소개 / 태그1 / 태그2 / 태그3 / 태그4 / 신청양식안내 / 공지사항안내 */
+function renderBasicInfo(rows){
+  const map = {};
+  rows.forEach(r => { map[(r['항목'] || '').trim()] = r['내용'] || ''; });
+  const nl2br = (s) => escapeHtml(s).replace(/\n/g, '<br>');
+  if(map['이름']){
+    const t = document.getElementById('hero-title'); if(t) t.textContent = map['이름'];
+  }
+  if(map['소개']){
+    const d = document.getElementById('hero-desc'); if(d) d.innerHTML = nl2br(map['소개']);
+  }
+  const tagWrap = document.getElementById('hero-tags');
+  if(tagWrap){
+    const tags = ['태그1','태그2','태그3','태그4'].map(k => map[k]).filter(v => v && v.trim() !== '');
+    if(tags.length) tagWrap.innerHTML = tags.map(t => `<span class="hero-tag">${escapeHtml(t)}</span>`).join('');
+  }
+  if(map['신청양식안내']){
+    const n = document.getElementById('form-note-box'); if(n) n.innerHTML = nl2br(map['신청양식안내']);
+  }
+  if(map['공지사항안내']){
+    const f = document.getElementById('notice-footer'); if(f) f.innerHTML = nl2br(map['공지사항안내']);
+  }
+  const detailKeys = ['작업순서상세1','작업순서상세2','작업순서상세3'].filter(k => map[k] && map[k].trim() !== '');
+  if(detailKeys.length){
+    const body = document.getElementById('process-detail-body');
+    if(body){
+      body.innerHTML = detailKeys.map(k => `<p>${nl2br(map[k]).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')}</p>`).join('');
+    }
+  }
+}
+if(MGMT_SHEET_ID){
+  fetchSheetRows('기본정보').then(rows => renderBasicInfo(mergeContinuationRows(rows, '항목', '내용'))).catch(() => {});
+}
+
+/* FAQ: "FAQ" 탭에 "질문","답변" 열로 한 줄씩 적으면 그 순서대로 다시 그려짐 */
+function renderFaqRows(rows){
+  const wrap = document.getElementById('faq-list');
+  if(!wrap || !rows.length) return;
+  wrap.innerHTML = rows.map(row => `
+    <details class="faq-qa">
+      <summary class="faq-q"><span class="notice-num">Q</span><span>${escapeHtml(row['질문'] || '')}</span><span class="faq-caret">›</span></summary>
+      <div class="faq-a"><span class="notice-num faq-a-mark">A</span><span>${escapeHtml(row['답변'] || '')}</span></div>
+    </details>`).join('');
+}
+if(MGMT_SHEET_ID){
+  fetchSheetRows('FAQ').then(renderFaqRows).catch(() => {});
 }
 
 /* ================= 신청 양식 미리보기 + 복사 ================= */
