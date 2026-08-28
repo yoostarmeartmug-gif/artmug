@@ -1180,11 +1180,11 @@ function copyRigForm(btn){
     currentIndex = (i + gallery.length) % gallery.length;
     const item = gallery[currentIndex];
     if(item.isVideo){
-      videoEl.src = item.src; videoEl.style.display = ''; imgEl.style.display = 'none'; imgEl.src = '';
+      videoEl.src = item.src; videoEl.style.display = 'block'; imgEl.style.display = 'none'; imgEl.src = '';
       videoEl.load();
       videoEl.play().catch(() => {});
     } else {
-      imgEl.src = item.src; imgEl.style.display = ''; videoEl.style.display = 'none'; videoEl.src = '';
+      imgEl.src = item.src; imgEl.style.display = 'block'; videoEl.style.display = 'none'; videoEl.src = '';
     }
     captionEl.textContent = item.caption || '';
     captionEl.style.display = item.caption ? '' : 'none';
