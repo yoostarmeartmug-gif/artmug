@@ -966,18 +966,31 @@ function renderBasicInfo(rows){
       body.innerHTML = detailKeys.map(k => `<p>${nl2br(map[k]).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')}</p>`).join('');
     }
   }
-  /* 신청양식 라벨/문구도 "기본정보" 탭에서 수정 가능: 신청양식라벨필독 / 신청양식필독X / 신청양식필독O /
-     신청양식라벨1~5 / 신청양식복사버튼 */
+}
+
+/* 신청양식: "신청양식" 탭에 "항목","내용" 열로 아래 항목명을 적으면 신청양식 라벨/문구가 교체됨
+   항목명: 안내문구 / 라벨필독 / 필독X / 필독O / 라벨1 / 라벨2 / 라벨3 / 라벨4 / 라벨5 / 복사버튼 */
+function renderFormLabels(rows){
+  const map = {};
+  rows.forEach(r => { map[(r['항목'] || '').trim()] = r['내용'] || ''; });
+  const nl2br = (s) => escapeHtml(s).replace(/\n/g, '<br>');
   const setText = (id, key) => { if(map[key] && map[key].trim() !== ''){ const el = document.getElementById(id); if(el) el.textContent = map[key]; } };
-  setText('form-label-read', '신청양식라벨필독');
-  setText('form-ox-x', '신청양식필독X');
-  setText('form-ox-o', '신청양식필독O');
-  setText('form-label-f1', '신청양식라벨1');
-  setText('form-label-f2', '신청양식라벨2');
-  setText('form-label-f3', '신청양식라벨3');
-  setText('form-label-f4', '신청양식라벨4');
-  setText('form-label-f5', '신청양식라벨5');
-  setText('form-submit-text', '신청양식복사버튼');
+  if(map['안내문구']){
+    const n = document.getElementById('form-note-box'); if(n) n.innerHTML = nl2br(map['안내문구']);
+  }
+  setText('form-label-read', '라벨필독');
+  setText('form-ox-x', '필독X');
+  setText('form-ox-o', '필독O');
+  setText('form-label-f1', '라벨1');
+  setText('form-label-f2', '라벨2');
+  setText('form-label-f3', '라벨3');
+  setText('form-label-f4', '라벨4');
+  setText('form-label-f5', '라벨5');
+  setText('form-submit-text', '복사버튼');
+  if(typeof buildFormPreview === 'function') buildFormPreview();
+}
+if(MGMT_SHEET_ID){
+  fetchSheetRows('신청양식').then(rows => renderFormLabels(mergeContinuationRows(rows, '항목', '내용'))).catch(() => {});
 }
 if(MGMT_SHEET_ID){
   fetchSheetRows('기본정보').then(rows => renderBasicInfo(mergeContinuationRows(rows, '항목', '내용'))).catch(() => {});
@@ -1117,15 +1130,22 @@ function buildFormPreview(){
   const f3 = document.getElementById('rf-f3')?.value.trim() || '(미입력)';
   const f4 = document.getElementById('rf-f4')?.value.trim() || '(미입력)';
   const f5 = document.getElementById('rf-f5')?.value.trim() || '(미입력)';
+  const labelText = (id, fallback) => document.getElementById(id)?.textContent.trim() || fallback;
+  const lRead = labelText('form-label-read', '필독사항 확인 여부');
+  const l1 = labelText('form-label-f1', '1. 방송 닉네임 및 주소');
+  const l2 = labelText('form-label-f2', '2. 신청하시는 작업내용');
+  const l3 = labelText('form-label-f3', '3. 원하시는 이미지와 참고자료');
+  const l4 = labelText('form-label-f4', '4. 추가하실 헤어 & 의상 & 악세 갯수');
+  const l5 = labelText('form-label-f5', '5. 기타 문의사항');
   const text =
 `[문의 양식]
 
-필독사항 확인 여부 : ${read}
-1. 방송 닉네임 및 주소 : ${f1}
-2. 신청하시는 작업내용 : ${f2}
-3. 원하시는 이미지와 참고자료 : ${f3}
-4. 추가하실 헤어 & 의상 & 악세 갯수 : ${f4}
-5. 기타 문의사항 : ${f5}`;
+${lRead} : ${read}
+${l1} : ${f1}
+${l2} : ${f2}
+${l3} : ${f3}
+${l4} : ${f4}
+${l5} : ${f5}`;
   const el = document.getElementById('form-preview');
   if(el) el.textContent = text;
 }
