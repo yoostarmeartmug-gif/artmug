@@ -363,7 +363,7 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 <header class="hero" id="hero">
   <img class="hero-profile" src="./작가사진.png" alt="작가 프로필">
   <div class="hero-inner">
-    <span class="hero-badge">VIRTUAL AVATAR ARTIST</span>
+    <span class="hero-badge" id="hero-badge">VIRTUAL AVATAR ARTIST</span>
     <h1 id="hero-title">유별나</h1>
     <p id="hero-desc">안녕하세요 버츄얼 아바타 작가 유별나입니다.<br>항상 모든 작업을 최선을 다하며, 정성스럽게 작업합니다.</p>
     <div class="hero-tags" id="hero-tags"><span class="hero-tag">버츄얼 아바타</span><span class="hero-tag">일러스트</span><span class="hero-tag">모델링</span><span class="hero-tag">퀄리티업</span></div>
@@ -966,6 +966,17 @@ function renderFaqRows(rows){
 }
 if(MGMT_SHEET_ID){
   fetchSheetRows('FAQ').then(renderFaqRows).catch(() => {});
+}
+
+/* 배지 문구: "버튼" 탭에 "문구" 열 1행에 텍스트를 적으면 상단 뱃지(예: VIRTUAL AVATAR ARTIST) 글자가 바뀜 */
+function renderBadgeText(rows){
+  const badge = document.getElementById('hero-badge');
+  if(!badge || !rows.length) return;
+  const text = (rows[0]['문구'] || '').trim();
+  if(text) badge.textContent = text;
+}
+if(MGMT_SHEET_ID){
+  fetchSheetRows('버튼').then(renderBadgeText).catch(() => {});
 }
 
 /* ================= 신청 양식 미리보기 + 복사 ================= */
