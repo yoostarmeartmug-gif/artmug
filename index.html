@@ -520,30 +520,30 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 
   <div class="form-grid">
     <div class="form-field">
-      <label>필독사항 확인 여부 <span class="req">*</span></label>
+      <label><span id="form-label-read">필독사항 확인 여부</span> <span class="req">*</span></label>
       <div class="select-btns rf-oxrow" id="rf-read-group">
-        <button type="button" class="select-btn rf-ox" data-val="X (안 읽었어요)">X (안 읽었어요)</button>
-        <button type="button" class="select-btn rf-ox" data-val="O (읽었어요)">O (읽었어요)</button>
+        <button type="button" class="select-btn rf-ox" data-val="X (안 읽었어요)"><span id="form-ox-x">X (안 읽었어요)</span></button>
+        <button type="button" class="select-btn rf-ox" data-val="O (읽었어요)"><span id="form-ox-o">O (읽었어요)</span></button>
       </div>
     </div>
     <div class="form-field">
-      <label>1. 방송 닉네임 및 주소 <span class="req">*</span></label>
+      <label><span id="form-label-f1">1. 방송 닉네임 및 주소</span> <span class="req">*</span></label>
       <input type="text" class="rf-text-input" id="rf-f1" placeholder="예: 닉네임 / 방송국 링크">
     </div>
     <div class="form-field">
-      <label>2. 신청하시는 작업내용 <span class="req">*</span></label>
+      <label><span id="form-label-f2">2. 신청하시는 작업내용</span> <span class="req">*</span></label>
       <input type="text" class="rf-text-input" id="rf-f2" placeholder="예: 아바타 뚜따, 페이셜 세팅 등">
     </div>
     <div class="form-field">
-      <label>3. 원하시는 이미지와 참고자료</label>
+      <label><span id="form-label-f3">3. 원하시는 이미지와 참고자료</span></label>
       <input type="text" class="rf-text-input" id="rf-f3" placeholder="예: 링크 또는 참고 설명">
     </div>
     <div class="form-field">
-      <label>4. 추가하실 헤어 & 의상 & 악세 갯수</label>
+      <label><span id="form-label-f4">4. 추가하실 헤어 & 의상 & 악세 갯수</span></label>
       <input type="text" class="rf-text-input" id="rf-f4" placeholder="예: 헤어 1개, 의상 1개">
     </div>
     <div class="form-field">
-      <label>5. 기타 문의사항</label>
+      <label><span id="form-label-f5">5. 기타 문의사항</span></label>
       <textarea class="rf-text-input rf-textarea" id="rf-f5" rows="3" placeholder="기타 문의사항을 적어주세요."></textarea>
     </div>
   </div>
@@ -553,7 +553,7 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
   <div class="form-button-row">
     <div class="btn-wrap">
       <div class="form-toast" id="rf-status">복사되었습니다</div>
-      <button type="button" class="form-submit" id="rf-submit" onclick="copyRigForm(this)">복사하기</button>
+      <button type="button" class="form-submit" id="rf-submit" onclick="copyRigForm(this)"><span id="form-submit-text">복사하기</span></button>
     </div>
   </div>
 </section>
@@ -966,6 +966,18 @@ function renderBasicInfo(rows){
       body.innerHTML = detailKeys.map(k => `<p>${nl2br(map[k]).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')}</p>`).join('');
     }
   }
+  /* 신청양식 라벨/문구도 "기본정보" 탭에서 수정 가능: 신청양식라벨필독 / 신청양식필독X / 신청양식필독O /
+     신청양식라벨1~5 / 신청양식복사버튼 */
+  const setText = (id, key) => { if(map[key] && map[key].trim() !== ''){ const el = document.getElementById(id); if(el) el.textContent = map[key]; } };
+  setText('form-label-read', '신청양식라벨필독');
+  setText('form-ox-x', '신청양식필독X');
+  setText('form-ox-o', '신청양식필독O');
+  setText('form-label-f1', '신청양식라벨1');
+  setText('form-label-f2', '신청양식라벨2');
+  setText('form-label-f3', '신청양식라벨3');
+  setText('form-label-f4', '신청양식라벨4');
+  setText('form-label-f5', '신청양식라벨5');
+  setText('form-submit-text', '신청양식복사버튼');
 }
 if(MGMT_SHEET_ID){
   fetchSheetRows('기본정보').then(rows => renderBasicInfo(mergeContinuationRows(rows, '항목', '내용'))).catch(() => {});
@@ -994,6 +1006,86 @@ function renderBadgeText(rows){
 }
 if(MGMT_SHEET_ID){
   fetchSheetRows('버튼').then(renderBadgeText).catch(() => {});
+}
+
+/* ================= 색상 - 특정 단어 강조 =================
+   "색상" 탭의 A열에 순서대로:
+   #FF0000   <- 색상 코드 행
+   닐로툰     <- 그 아래에 이 색상으로 칠할 단어(들)을 한 줄씩 적음
+   버츄얼
+   #00AAFF   <- 다음 색상 코드 행이 나오면 그 아래부터는 새 색상 적용
+   VR챗
+   이렇게 적어두면 페이지 안의 모든 텍스트에서 해당 단어를 찾아 지정한 색으로 칠해준다. */
+function fetchColorWordRows(){
+  return fetch(sheetCsvUrl('색상'))
+    .then(res => { if(!res.ok) throw new Error('bad status'); return res.text(); })
+    .then(text => parseCsvGeneric(text));
+}
+function parseColorWordMap(rows){
+  const map = {};
+  let currentColor = '';
+  rows.forEach(row => {
+    const cell = (row[0] || '').trim();
+    if(!cell) return;
+    if(/^#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/.test(cell)){
+      currentColor = cell;
+    } else if(currentColor){
+      map[cell] = currentColor;
+    }
+  });
+  return map;
+}
+function applyColorWords(map){
+  const words = Object.keys(map).filter(w => w.trim() !== '');
+  if(!words.length) return;
+  /* 긴 단어부터 먼저 매칭해서, 짧은 단어가 긴 단어의 일부를 먼저 잘라먹는 것을 방지 */
+  words.sort((a, b) => b.length - a.length);
+  const skipTags = { SCRIPT:1, STYLE:1, TEXTAREA:1, INPUT:1 };
+  function walk(node){
+    if(node.nodeType === 1){
+      if(skipTags[node.tagName] || node.classList.contains('clr-hl')) return;
+      Array.prototype.slice.call(node.childNodes).forEach(walk);
+      return;
+    }
+    if(node.nodeType !== 3) return;
+    const text = node.textContent;
+    let hit = null;
+    for(const w of words){
+      if(w && text.indexOf(w) !== -1){ hit = w; break; }
+    }
+    if(!hit) return;
+    const frag = document.createDocumentFragment();
+    let remaining = text;
+    while(remaining){
+      let bestIdx = -1, bestWord = '';
+      for(const w of words){
+        if(!w) continue;
+        const idx = remaining.indexOf(w);
+        if(idx !== -1 && (bestIdx === -1 || idx < bestIdx)){ bestIdx = idx; bestWord = w; }
+      }
+      if(bestIdx === -1){
+        frag.appendChild(document.createTextNode(remaining));
+        remaining = '';
+      } else {
+        if(bestIdx > 0) frag.appendChild(document.createTextNode(remaining.slice(0, bestIdx)));
+        const span = document.createElement('span');
+        span.className = 'clr-hl';
+        span.style.color = map[bestWord];
+        span.textContent = bestWord;
+        frag.appendChild(span);
+        remaining = remaining.slice(bestIdx + bestWord.length);
+      }
+    }
+    node.parentNode.replaceChild(frag, node);
+  }
+  walk(document.body);
+}
+if(MGMT_SHEET_ID){
+  fetchColorWordRows().then(rows => {
+    const map = parseColorWordMap(rows);
+    /* 구글 시트/깃허브 폴더 연동 등 다른 렌더링이 먼저 끝나도록 약간 기다렸다가 적용 */
+    setTimeout(() => applyColorWords(map), 1500);
+  }).catch(() => {});
 }
 
 /* ================= 신청 양식 미리보기 + 복사 ================= */
