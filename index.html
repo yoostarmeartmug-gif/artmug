@@ -115,8 +115,8 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
   background:rgba(255,255,255,.6);border:1px solid rgba(155,127,209,.45);color:#A48FD6;
   padding:7px 18px;border-radius:999px;margin-bottom:18px;
 }
-.hero h1{font-family:'Jalnan2',cursive;font-size:clamp(32px,4.6vw,44px);font-weight:700;line-height:1.4;margin:0 0 14px;color:#333333;}
-.hero p{font-size:18px;color:rgba(91,84,104,.82);max-width:560px;margin:0 0 20px;}
+.hero h1{font-family:'Jalnan2',cursive;font-size:clamp(24px,3.4vw,34px);font-weight:700;line-height:1.4;margin:0 0 14px;color:#333333;}
+.hero p{font-size:14px;color:rgba(91,84,104,.82);max-width:560px;margin:0 0 20px;}
 .hero-tags{display:flex;gap:8px;flex-wrap:wrap;}
 .hero-tag{
   background:rgba(255,255,255,.55);border:1px solid rgba(155,127,209,.35);padding:9px 16px;border-radius:999px;
@@ -188,11 +188,11 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
   display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;letter-spacing:.02em;white-space:nowrap;
   box-shadow:0 8px 16px -4px rgba(155,127,209,.45);
 }
-.process-track .process-step:nth-child(1) .process-num{background:#D9CDF5;}
-.process-track .process-step:nth-child(3) .process-num{background:#E9D9F0;}
-.process-track .process-step:nth-child(5) .process-num{background:#FFD6E8;}
-.process-track .process-step:nth-child(7) .process-num{background:#D8E2F7;}
-.process-track .process-step:nth-child(9) .process-num{background:#CBD9F5;}
+.process-track .process-step:nth-child(1) .process-num{background:#DCD3F3;}
+.process-track .process-step:nth-child(3) .process-num{background:#E5DBF4;}
+.process-track .process-step:nth-child(5) .process-num{background:#F8D6E6;}
+.process-track .process-step:nth-child(7) .process-num{background:#D3E0F3;}
+.process-track .process-step:nth-child(9) .process-num{background:#D2EDDE;}
 .process-detail{margin-top:22px;border-top:1px solid var(--line);padding-top:16px;}
 .process-detail-toggle{text-align:center;font-size:16px;font-weight:700;color:var(--mint-deep);}
 .process-detail-body{margin-top:16px;background:rgba(201,182,234,.08);border-radius:16px;padding:20px;text-align:center;}
@@ -904,7 +904,7 @@ if(MGMT_SHEET_ID){
 }
 
 /* 작업순서: "작업순서" 탭에 "번호","라벨" 열로 한 줄씩 적으면 그 순서대로 STEP이 다시 그려짐 */
-const PROCESS_NUM_COLORS = ['#D9CDF5','#E9D9F0','#FFD6E8','#D8E2F7','#CBD9F5'];
+const PROCESS_NUM_COLORS = ['#DCD3F3','#E5DBF4','#F8D6E6','#D3E0F3','#D2EDDE'];
 function renderProcessRows(rows){
   const wrap = document.getElementById('process-track');
   if(!wrap || !rows.length) return;
