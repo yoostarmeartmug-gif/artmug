@@ -189,8 +189,8 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
   box-shadow:0 8px 16px -4px rgba(155,127,209,.45);
 }
 .process-track .process-step:nth-child(1) .process-num{background:#DCD3F3;}
-.process-track .process-step:nth-child(3) .process-num{background:#E5DBF4;}
-.process-track .process-step:nth-child(5) .process-num{background:#F8D6E6;}
+.process-track .process-step:nth-child(3) .process-num{background:#F8D6E6;}
+.process-track .process-step:nth-child(5) .process-num{background:#E5DBF4;}
 .process-track .process-step:nth-child(7) .process-num{background:#D3E0F3;}
 .process-track .process-step:nth-child(9) .process-num{background:#D2EDDE;}
 .process-detail{margin-top:22px;border-top:1px solid var(--line);padding-top:16px;}
@@ -904,7 +904,7 @@ if(MGMT_SHEET_ID){
 }
 
 /* 작업순서: "작업순서" 탭에 "번호","라벨" 열로 한 줄씩 적으면 그 순서대로 STEP이 다시 그려짐 */
-const PROCESS_NUM_COLORS = ['#DCD3F3','#E5DBF4','#F8D6E6','#D3E0F3','#D2EDDE'];
+const PROCESS_NUM_COLORS = ['#DCD3F3','#F8D6E6','#E5DBF4','#D3E0F3','#D2EDDE'];
 function renderProcessRows(rows){
   const wrap = document.getElementById('process-track');
   if(!wrap || !rows.length) return;
