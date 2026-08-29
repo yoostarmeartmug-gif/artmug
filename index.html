@@ -347,13 +347,13 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 }
 @media (max-width:600px){
   .process-track{
-    display:grid;grid-template-columns:44px 1fr;align-items:center;
-    row-gap:10px;column-gap:14px;width:auto;max-width:200px;margin:0 auto;
+    display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;
+    row-gap:20px;column-gap:0;
   }
-  .process-step{display:contents;}
-  .process-step .process-num{grid-column:1;justify-self:center;margin:0;}
-  .process-step .process-label{grid-column:2;justify-self:start;text-align:left;}
-  .process-arrow{grid-column:1;justify-self:center;width:auto;height:auto;transform:rotate(90deg);opacity:.5;}
+  .process-step{width:74px;}
+  .process-num{width:36px;height:36px;font-size:13px;margin:0 0 8px;}
+  .process-label{font-size:12px;white-space:normal;line-height:1.3;}
+  .process-arrow{width:20px;height:36px;font-size:15px;opacity:.6;}
 }
 </style>
 </head>
