@@ -396,9 +396,8 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 <!-- ============ 리뷰이벤트 / 보유아바타 ============ -->
 <section class="section" id="review">
   <div class="section-head"><div class="section-icon"></div><div class="section-title" id="title-review">★ 리뷰 이벤트</div></div>
-  <div class="portfolio-row drag-scroll" id="review-row">
-    <div class="portfolio-item pending">준비중</div>
-  </div>
+  <div class="portfolio-tabs" id="review-tabs"></div>
+  <div id="review-groups"></div>
 </section>
 
 <!-- ============ 포폴 ============ -->
@@ -814,18 +813,12 @@ if(PORTFOLIO2_CSV_URL){
 }
 
 /* ================= 리뷰이벤트 / 보유아바타 - 시트 연동 =================
-   "리뷰이벤트" 탭에 "제목","링크","설명" 열로 한 줄씩 적으면 됨 (구분/탭 없이 한 줄로 쭉 나옴).
-   링크는 이미지든 mp4/gif든 포트폴리오와 똑같이 처리됨. */
-function renderSimpleGallery(items, rowId){
-  const row = document.getElementById(rowId);
-  if(!row || !items.length) return;
-  row.innerHTML = items.map(portfolioItemHtml).join('');
-  makeDragScroll(row);
-}
+   "리뷰이벤트" 탭에 "제목","링크","구분","설명" 열로 한 줄씩 적으면 포트폴리오와 똑같이
+   "구분" 값별로 탭 버튼이 자동으로 생기고, 그 아래에 이미지/gif/영상+설명이 나온다. */
 if(MGMT_SHEET_ID){
   fetch(sheetCsvUrl('리뷰이벤트'))
     .then(res => res.text())
-    .then(text => renderSimpleGallery(parsePortfolioCsv(text), 'review-row'))
+    .then(text => renderPortfolio(parsePortfolioCsv(text), 'review-groups'))
     .catch(() => {});
 }
 
@@ -875,14 +868,6 @@ function renderFolderPortfolio(map, wrapId){
     });
   });
 }
-/* 리뷰이벤트도 포트폴리오처럼 깃허브 폴더에 파일만 넣어도 자동으로 나온다.
-   저장소에 "리뷰이벤트" 라는 폴더를 만들고 그 안에 이미지/gif/영상 파일을 넣으면 됨. */
-fetchGithubFolder('리뷰이벤트').then(files => {
-  if(!Array.isArray(files)) return;
-  const media = files.filter(f => f && f.type === 'file' && isMediaFileName(f.name));
-  if(!media.length) return;
-  renderSimpleGallery(media.map(f => ({ title: f.name.replace(/\.[^.]+$/, ''), link: f.download_url, desc: '' })), 'review-row');
-});
 renderFolderPortfolio(PORTFOLIO_FOLDER_MAP, 'portfolio-groups');
 renderFolderPortfolio(PORTFOLIO2_FOLDER_MAP, 'portfolio2-groups');
 
