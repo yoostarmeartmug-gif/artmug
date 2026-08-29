@@ -76,6 +76,7 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
   display:flex;align-items:center;justify-content:center;
 }
 .section-icon::before{content:'★';}
+#review .section-icon{color:#FFD6E8;}
 #process .section-icon{color:#FFE5EA;}
 #portfolio .section-icon{color:#F8FFE3;}
 #portfolio2 .section-icon{color:#E5FFFB;}
@@ -389,6 +390,14 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
       <p>빠른마감 옵션은 따로 만들지 않았습니다.<br>작업은 결제 &gt; 피드백 순서 대로 진행되며, <strong>평균 1~3일 안에 받아보실 수 있습니다!</strong></p>
       <p>저사양이거나 어려워서 와루도 고민이시라면, <strong>걱정마세요!</strong><br><strong>1060 그래픽카드에서도 세팅 경험 있습니다!</strong> 사용방법도 어렵지 않아요!<br>저는 단순히 파일만 뽑아 드리는 것이 아닌,<br>방송에서 <strong>실사용하실 수 있게 원격으로 기본세팅과 사용설명</strong> 해드리고 있어요!</p>
     </div>
+  </div>
+</section>
+
+<!-- ============ 리뷰이벤트 / 보유아바타 ============ -->
+<section class="section" id="review">
+  <div class="section-head"><div class="section-icon"></div><div class="section-title" id="title-review">★ 리뷰 이벤트</div></div>
+  <div class="portfolio-row drag-scroll" id="review-row">
+    <div class="portfolio-item pending">준비중</div>
   </div>
 </section>
 
@@ -804,6 +813,22 @@ if(PORTFOLIO2_CSV_URL){
     .catch(() => {});
 }
 
+/* ================= 리뷰이벤트 / 보유아바타 - 시트 연동 =================
+   "리뷰이벤트" 탭에 "제목","링크","설명" 열로 한 줄씩 적으면 됨 (구분/탭 없이 한 줄로 쭉 나옴).
+   링크는 이미지든 mp4/gif든 포트폴리오와 똑같이 처리됨. */
+function renderSimpleGallery(items, rowId){
+  const row = document.getElementById(rowId);
+  if(!row || !items.length) return;
+  row.innerHTML = items.map(portfolioItemHtml).join('');
+  makeDragScroll(row);
+}
+if(MGMT_SHEET_ID){
+  fetch(sheetCsvUrl('리뷰이벤트'))
+    .then(res => res.text())
+    .then(text => renderSimpleGallery(parsePortfolioCsv(text), 'review-row'))
+    .catch(() => {});
+}
+
 /* ================= 포트폴리오 - 깃허브 폴더 자동 연동 (구글 시트 없이) =================
    같은 깃허브 저장소 안의 폴더에 사진/영상 파일을 넣기만 하면 자동으로 그 탭에 나타난다.
    폴더 안에 파일이 하나도 없으면(안내용 텍스트 파일만 있으면) 기존 "준비중" 표시를 그대로 둔다. */
@@ -984,6 +1009,7 @@ function renderBasicInfo(rows){
   setTitle('title-notice', '제목공지사항');
   setTitle('title-form', '제목신청양식');
   setTitle('title-faq', '제목FAQ');
+  setTitle('title-review', '제목리뷰이벤트');
   /* 포트폴리오 탭 순서: "기본정보" 탭에 항목명 "포트폴리오순서" / "포트폴리오2순서" 를 만들고
      내용 칸에 탭 이름을 원하는 순서대로 쉼표(,)로 구분해서 적으면 그 순서로 탭이 재배치됨
      예: 버츄얼,닐로툰,API,퀄리티업,VR챗,실시간렌즈
