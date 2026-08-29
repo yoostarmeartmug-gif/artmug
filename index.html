@@ -983,6 +983,11 @@ function reorderPortfolioTabs(tabsId, panelsId, orderStr){
     const panel = Array.prototype.find.call(panelWrap.querySelectorAll('.portfolio-panel'), p => p.dataset.tab === name);
     if(panel) panelWrap.appendChild(panel);
   });
+  /* 순서를 다시 배치한 뒤에는 항상 맨 앞(첫번째) 탭이 기본으로 보이게 한다 */
+  const btnsNow = tabsWrap.querySelectorAll('.tab-btn');
+  const panelsNow = panelWrap.querySelectorAll('.portfolio-panel');
+  btnsNow.forEach((b, i) => b.classList.toggle('active', i === 0));
+  panelsNow.forEach((p, i) => p.classList.toggle('active', i === 0));
 }
 function renderBasicInfo(rows){
   const map = {};
