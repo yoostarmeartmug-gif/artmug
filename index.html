@@ -828,14 +828,6 @@ if(MGMT_SHEET_ID){
     .then(text => renderSimpleGallery(parsePortfolioCsv(text), 'review-row'))
     .catch(() => {});
 }
-/* 리뷰이벤트도 포트폴리오처럼 깃허브 폴더에 파일만 넣어도 자동으로 나온다.
-   저장소에 "리뷰이벤트" 라는 폴더를 만들고 그 안에 이미지/gif/영상 파일을 넣으면 됨. */
-fetchGithubFolder('리뷰이벤트').then(files => {
-  if(!Array.isArray(files)) return;
-  const media = files.filter(f => f && f.type === 'file' && isMediaFileName(f.name));
-  if(!media.length) return;
-  renderSimpleGallery(media.map(f => ({ title: f.name.replace(/\.[^.]+$/, ''), link: f.download_url, desc: '' })), 'review-row');
-});
 
 /* ================= 포트폴리오 - 깃허브 폴더 자동 연동 (구글 시트 없이) =================
    같은 깃허브 저장소 안의 폴더에 사진/영상 파일을 넣기만 하면 자동으로 그 탭에 나타난다.
@@ -883,6 +875,14 @@ function renderFolderPortfolio(map, wrapId){
     });
   });
 }
+/* 리뷰이벤트도 포트폴리오처럼 깃허브 폴더에 파일만 넣어도 자동으로 나온다.
+   저장소에 "리뷰이벤트" 라는 폴더를 만들고 그 안에 이미지/gif/영상 파일을 넣으면 됨. */
+fetchGithubFolder('리뷰이벤트').then(files => {
+  if(!Array.isArray(files)) return;
+  const media = files.filter(f => f && f.type === 'file' && isMediaFileName(f.name));
+  if(!media.length) return;
+  renderSimpleGallery(media.map(f => ({ title: f.name.replace(/\.[^.]+$/, ''), link: f.download_url, desc: '' })), 'review-row');
+});
 renderFolderPortfolio(PORTFOLIO_FOLDER_MAP, 'portfolio-groups');
 renderFolderPortfolio(PORTFOLIO2_FOLDER_MAP, 'portfolio2-groups');
 
