@@ -230,10 +230,10 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 /* ================= 포폴 ================= */
 .portfolio-row{
   display:flex;gap:14px;flex-wrap:nowrap;overflow-x:auto;padding:8px 2px 8px;
-  scrollbar-width:thin;scrollbar-color:var(--mint-deep) transparent;
+  scrollbar-width:thin;scrollbar-color:#b0b0b0 transparent;
 }
 .portfolio-row::-webkit-scrollbar{height:6px;}
-.portfolio-row::-webkit-scrollbar-thumb{background:var(--mint-deep);border-radius:999px;}
+.portfolio-row::-webkit-scrollbar-thumb{background:#b0b0b0;border-radius:999px;}
 .portfolio-row::-webkit-scrollbar-track{background:transparent;}
 .portfolio-row.drag-scroll{cursor:grab;}
 .portfolio-row.drag-scroll.dragging{cursor:grabbing;user-select:none;}
@@ -929,6 +929,19 @@ const HERO_TAG_COLORS = [
   'border-color:rgba(122,190,150,.3);color:#A4D4B7;background:rgba(122,190,150,.06);',
   'border-color:rgba(224,150,180,.3);color:#E0A0C0;background:rgba(224,150,180,.06);'
 ];
+function reorderPortfolioTabs(tabsId, panelsId, orderStr){
+  if(!orderStr || !orderStr.trim()) return;
+  const order = orderStr.split(/[,\n]/).map(s => s.trim()).filter(Boolean);
+  const tabsWrap = document.getElementById(tabsId);
+  const panelWrap = document.getElementById(panelsId);
+  if(!tabsWrap || !panelWrap) return;
+  order.forEach(name => {
+    const btn = Array.prototype.find.call(tabsWrap.querySelectorAll('.tab-btn'), b => b.dataset.tab === name);
+    if(btn) tabsWrap.appendChild(btn);
+    const panel = Array.prototype.find.call(panelWrap.querySelectorAll('.portfolio-panel'), p => p.dataset.tab === name);
+    if(panel) panelWrap.appendChild(panel);
+  });
+}
 function renderBasicInfo(rows){
   const map = {};
   rows.forEach(r => { map[(r['항목'] || '').trim()] = r['내용'] || ''; });
@@ -967,6 +980,14 @@ function renderBasicInfo(rows){
   setTitle('title-notice', '제목공지사항');
   setTitle('title-form', '제목신청양식');
   setTitle('title-faq', '제목FAQ');
+  /* 포트폴리오 탭 순서: "기본정보" 탭에 항목명 "포트폴리오순서" / "포트폴리오2순서" 를 만들고
+     내용 칸에 탭 이름을 원하는 순서대로 쉼표(,)로 구분해서 적으면 그 순서로 탭이 재배치됨
+     예: 버츄얼,닐로툰,API,퀄리티업,VR챗,실시간렌즈
+     (구글시트/깃허브 폴더로 새로 생기는 탭이 있을 수 있어서 약간 기다렸다가 적용) */
+  setTimeout(() => {
+    reorderPortfolioTabs('portfolio-tabs', 'portfolio-groups', map['포트폴리오순서']);
+    reorderPortfolioTabs('portfolio2-tabs', 'portfolio2-groups', map['포트폴리오2순서']);
+  }, 1200);
   const detailKeys = ['작업순서상세1','작업순서상세2','작업순서상세3'].filter(k => map[k] && map[k].trim() !== '');
   if(detailKeys.length){
     const body = document.getElementById('process-detail-body');
