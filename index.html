@@ -967,13 +967,18 @@ const HERO_TAG_COLORS = [
   'border-color:rgba(224,150,180,.3);color:#E0A0C0;background:rgba(224,150,180,.06);'
 ];
 function reorderPortfolioTabs(tabsId, panelsId, orderStr){
-  if(!orderStr || !orderStr.trim()) return;
-  const order = orderStr.split(/[,\n]/).map(s => s.trim()).filter(Boolean);
   const tabsWrap = document.getElementById(tabsId);
   const panelWrap = document.getElementById(panelsId);
   if(!tabsWrap || !panelWrap) return;
+  const allBtns = Array.prototype.slice.call(tabsWrap.querySelectorAll('.tab-btn'));
+  if(!allBtns.length) return;
+  const allNames = allBtns.map(b => b.dataset.tab);
+  const order = (orderStr || '').split(/[,\n]/).map(s => s.trim()).filter(Boolean);
+  /* 순서 목록에 없는 기존 탭은 목록 맨 뒤에 원래 순서 그대로 붙여서,
+     지정 안 된 탭 때문에 앞쪽 순서가 밀리는 일이 없게 한다 */
+  allNames.forEach(n => { if(order.indexOf(n) === -1) order.push(n); });
   order.forEach(name => {
-    const btn = Array.prototype.find.call(tabsWrap.querySelectorAll('.tab-btn'), b => b.dataset.tab === name);
+    const btn = allBtns.find(b => b.dataset.tab === name);
     if(btn) tabsWrap.appendChild(btn);
     const panel = Array.prototype.find.call(panelWrap.querySelectorAll('.portfolio-panel'), p => p.dataset.tab === name);
     if(panel) panelWrap.appendChild(panel);
