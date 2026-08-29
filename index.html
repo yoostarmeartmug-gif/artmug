@@ -76,12 +76,12 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
   display:flex;align-items:center;justify-content:center;
 }
 .section-icon::before{content:'★';}
-#process .section-icon{color:#D9CDF5;}
-#portfolio .section-icon{color:#CBD9F5;}
-#portfolio2 .section-icon{color:#FFD6E8;}
-#notice .section-icon{color:#D9CDF5;}
-#form .section-icon{color:#CBD9F5;}
-#faq .section-icon{color:#FFD6E8;}
+#process .section-icon{color:#FFE5EA;}
+#portfolio .section-icon{color:#F8FFE3;}
+#portfolio2 .section-icon{color:#E5FFFB;}
+#notice .section-icon{color:#E6F5FF;}
+#form .section-icon{color:#E7E8FF;}
+#faq .section-icon{color:#F4EAFF;}
 .section-title{font-family:'Jalnan2',cursive;font-size:26px;font-weight:700;color:var(--black);letter-spacing:-.2px;}
 .section-sub{font-size:16px;color:var(--sub);margin:-12px 0 18px 20px;}
 
@@ -372,7 +372,7 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 
 <!-- ============ 작업순서 ============ -->
 <section class="section" id="process">
-  <div class="section-head"><div class="section-icon"></div><div class="section-title">작업 진행 순서</div></div>
+  <div class="section-head"><div class="section-icon"></div><div class="section-title" id="title-process">작업 진행 순서</div></div>
   <div class="process-track" id="process-track">
     <div class="process-step"><div class="process-num">01</div><div class="process-label">문의/상담</div></div>
     <div class="process-arrow">→</div>
@@ -394,7 +394,7 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 
 <!-- ============ 포폴 ============ -->
 <section class="section" id="portfolio">
-  <div class="section-head"><div class="section-icon"></div><div class="section-title">포트폴리오</div></div>
+  <div class="section-head"><div class="section-icon"></div><div class="section-title" id="title-portfolio">포트폴리오</div></div>
   <div class="portfolio-tabs" id="portfolio-tabs">
     <button type="button" class="tab-btn active" data-tab="닐로툰">닐로툰</button>
     <button type="button" class="tab-btn" data-tab="버츄얼">버츄얼</button>
@@ -434,7 +434,7 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 
 <!-- ============ 포폴2 ============ -->
 <section class="section" id="portfolio2">
-  <div class="section-head"><div class="section-icon"></div><div class="section-title">포트폴리오 2</div></div>
+  <div class="section-head"><div class="section-icon"></div><div class="section-title" id="title-portfolio2">포트폴리오 2</div></div>
   <div class="portfolio-tabs" id="portfolio2-tabs">
     <button type="button" class="tab-btn active" data-tab="보유중 아바타">보유중 아바타</button>
     <button type="button" class="tab-btn" data-tab="개인작 판매">개인작 판매</button>
@@ -455,7 +455,7 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 
 <!-- ============ 공지사항 ============ -->
 <section class="section" id="notice">
-  <div class="section-head"><div class="section-icon"></div><div class="section-title">공지사항</div></div>
+  <div class="section-head"><div class="section-icon"></div><div class="section-title" id="title-notice">공지사항</div></div>
   <div class="notice-alert"><span class="notice-alert-mark">※</span> 공지사항 미숙지로 인해 발생하는 불이익은 작가가 절대 책임지지 않습니다!</div>
   <div class="notice-list" id="notice-list">
     <div class="notice-card">
@@ -515,7 +515,7 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 
 <!-- ============ 신청양식 ============ -->
 <section class="section" id="form">
-  <div class="section-head"><div class="section-icon"></div><div class="section-title">문의 양식 작성 및 복사</div></div>
+  <div class="section-head"><div class="section-icon"></div><div class="section-title" id="title-form">문의 양식 작성 및 복사</div></div>
   <div class="form-note-box" id="form-note-box">스케줄 및 슬롯 관리에 따라 일부 작업은 조율이 필요할 수 있으니,<br>궁금하신 점은 편하게 먼저 문의해 주세요!</div>
 
   <div class="form-grid">
@@ -560,7 +560,7 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 
 <!-- ============ 자주묻는질문 ============ -->
 <section class="section" id="faq">
-  <div class="section-head"><div class="section-icon"></div><div class="section-title">자주 묻는 질문</div></div>
+  <div class="section-head"><div class="section-icon"></div><div class="section-title" id="title-faq">자주 묻는 질문</div></div>
   <div class="faq-list" id="faq-list">
     <details class="faq-qa">
       <summary class="faq-q"><span class="notice-num">Q</span><span>작업 기간은 얼마나 걸리나요?</span><span class="faq-caret">+</span></summary>
@@ -959,6 +959,14 @@ function renderBasicInfo(rows){
   if(map['공지사항안내']){
     const f = document.getElementById('notice-footer'); if(f) f.innerHTML = nl2br(map['공지사항안내']);
   }
+  /* 섹션 제목: 제목작업순서 / 제목포트폴리오 / 제목포트폴리오2 / 제목공지사항 / 제목신청양식 / 제목FAQ */
+  const setTitle = (id, key) => { if(map[key] && map[key].trim() !== ''){ const el = document.getElementById(id); if(el) el.textContent = map[key]; } };
+  setTitle('title-process', '제목작업순서');
+  setTitle('title-portfolio', '제목포트폴리오');
+  setTitle('title-portfolio2', '제목포트폴리오2');
+  setTitle('title-notice', '제목공지사항');
+  setTitle('title-form', '제목신청양식');
+  setTitle('title-faq', '제목FAQ');
   const detailKeys = ['작업순서상세1','작업순서상세2','작업순서상세3'].filter(k => map[k] && map[k].trim() !== '');
   if(detailKeys.length){
     const body = document.getElementById('process-detail-body');
