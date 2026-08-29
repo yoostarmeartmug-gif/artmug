@@ -770,7 +770,8 @@ function renderPortfolio(items, wrapId){
     if(!g) return;
     (byGroup[g] = byGroup[g] || []).push(it);
   });
-  Object.keys(byGroup).forEach(g => {
+  const groupOrder = Object.keys(byGroup);
+  groupOrder.forEach(g => {
     const panel = ensurePortfolioTab(wrapId, g);
     if(!panel) return;
     panel.innerHTML = `<div class="portfolio-row drag-scroll"></div>`;
@@ -778,6 +779,9 @@ function renderPortfolio(items, wrapId){
     row.innerHTML = byGroup[g].map(portfolioItemHtml).join('');
     makeDragScroll(row);
   });
+  /* 시트("구분" 열)에 적힌 순서 그대로 탭 버튼 순서도 재배치한다 — 시트에서 순서를 바꾸면 탭 순서도 바뀜 */
+  const tabsId = wrapId.replace('-groups', '-tabs');
+  reorderPortfolioTabs(tabsId, wrapId, groupOrder.join(','));
 }
 function makeDragScroll(row){
   let dragging = false, startX = 0, startScroll = 0, moved = false;
