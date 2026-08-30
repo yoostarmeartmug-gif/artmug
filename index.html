@@ -287,7 +287,9 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 .portfolio-item video,.portfolio-item img,.portfolio-item iframe{width:100%;height:100%;object-fit:cover;display:block;border:none;}
 .portfolio-panel[data-tab="닐로툰"] .portfolio-row{
   display:grid;grid-template-columns:repeat(2,1fr);gap:14px;flex-wrap:wrap;overflow-x:visible;
+  overflow-y:auto;padding-right:8px;
 }
+.portfolio-panel[data-tab="닐로툰"] .portfolio-row::-webkit-scrollbar{width:6px;}
 .portfolio-panel[data-tab="닐로툰"] .portfolio-item{width:100%;}
 .portfolio-panel[data-tab="닐로툰"] .portfolio-item-media{width:100%;height:auto;aspect-ratio:1/1;}
 @media (max-width:600px){
@@ -924,9 +926,27 @@ function renderFolderPortfolio(map, wrapId){
       panel.innerHTML = '';
       panel.appendChild(row);
       makeDragScroll(row);
+      if(tab === '닐로툰') clampNiloRows();
     });
   });
 }
+/* 닐로툰 탭은 항상 2x2(2줄)까지만 보이고, 나머지는 세로 스크롤로 보게 높이를 고정한다 */
+function clampNiloRows(){
+  const row = document.querySelector('.portfolio-panel[data-tab="닐로툰"] .portfolio-row');
+  if(!row) return;
+  const items = Array.prototype.slice.call(row.children).filter(el => el.classList.contains('portfolio-item'));
+  if(items.length < 3){ row.style.maxHeight = ''; return; }
+  let rowsSeen = 0, prevTop = null, lastRowBottom = 0;
+  for(let i = 0; i < items.length; i++){
+    const top = items[i].offsetTop;
+    if(prevTop === null || top > prevTop + 5){ rowsSeen++; prevTop = top; }
+    if(rowsSeen === 2) lastRowBottom = Math.max(lastRowBottom, top + items[i].offsetHeight);
+    if(rowsSeen > 2) break;
+  }
+  row.style.maxHeight = rowsSeen >= 2 && lastRowBottom > 0 ? (lastRowBottom + 8) + 'px' : '';
+}
+window.addEventListener('load', clampNiloRows);
+window.addEventListener('resize', clampNiloRows);
 renderFolderPortfolio(PORTFOLIO_FOLDER_MAP, 'portfolio-groups');
 renderFolderPortfolio(PORTFOLIO2_FOLDER_MAP, 'portfolio2-groups');
 
