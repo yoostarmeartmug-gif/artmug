@@ -286,7 +286,7 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 .portfolio-item-media{width:220px;height:220px;flex:0 0 auto;}
 .portfolio-item video,.portfolio-item img,.portfolio-item iframe{width:100%;height:100%;object-fit:cover;display:block;border:none;}
 @media (max-width:600px){
-  .portfolio-panel[data-tab="닐로툰"] .portfolio-row{
+  #portfolio-groups .portfolio-panel .portfolio-row{
     display:grid !important;
     grid-auto-flow:column !important;
     grid-template-rows:repeat(2,auto) !important;
@@ -297,9 +297,9 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
     overflow-x:auto !important;overflow-y:hidden !important;
     padding:8px 2px 8px;
   }
-  .portfolio-panel[data-tab="닐로툰"] .portfolio-row::-webkit-scrollbar{height:6px;}
-  .portfolio-panel[data-tab="닐로툰"] .portfolio-item{width:100% !important;flex:none !important;}
-  .portfolio-panel[data-tab="닐로툰"] .portfolio-item-media{width:100% !important;height:auto !important;aspect-ratio:1/1;}
+  #portfolio-groups .portfolio-panel .portfolio-row::-webkit-scrollbar{height:6px;}
+  #portfolio-groups .portfolio-panel .portfolio-item{width:100% !important;flex:none !important;}
+  #portfolio-groups .portfolio-panel .portfolio-item-media{width:100% !important;height:auto !important;aspect-ratio:1/1;}
 }
 .portfolio-caption{
   padding:10px 12px;text-align:center;font-size:13px;font-weight:700;color:var(--ink);
