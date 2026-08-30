@@ -185,15 +185,10 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
   color:var(--sub);font-size:20px;font-weight:700;opacity:.6;
 }
 .process-num{
-  width:44px;height:44px;flex:0 0 auto;margin:0 0 10px;padding:2px 0 0;
+  width:44px;height:44px;flex:0 0 auto;border-radius:50%;margin:0 0 10px;padding:0;
   background:var(--mint-sky);color:#fff;font-family:'Jalnan2',cursive;
   display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;letter-spacing:.02em;white-space:nowrap;
-  filter:drop-shadow(0 8px 10px rgba(155,127,209,.45));
-  -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 29'><path d='M16,29 C16,29 2,20 2,10 C2,4 6,0 11,0 C13.5,0 15.5,1.5 16,4 C16.5,1.5 18.5,0 21,0 C26,0 30,4 30,10 C30,20 16,29 16,29 Z'/></svg>");
-  mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 29'><path d='M16,29 C16,29 2,20 2,10 C2,4 6,0 11,0 C13.5,0 15.5,1.5 16,4 C16.5,1.5 18.5,0 21,0 C26,0 30,4 30,10 C30,20 16,29 16,29 Z'/></svg>");
-  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
-  -webkit-mask-size:100% 100%;mask-size:100% 100%;
-  -webkit-mask-position:center;mask-position:center;
+  box-shadow:0 8px 16px -4px rgba(155,127,209,.45);
 }
 .process-track .process-step:nth-child(1) .process-num{background:#DCD3F3;}
 .process-track .process-step:nth-child(3) .process-num{background:#F8D6E6;}
@@ -221,6 +216,15 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 .calc-checkbox{width:18px;height:18px;accent-color:var(--mint-deep);flex:0 0 auto;cursor:pointer;}
 .calc-item-label{flex:1;font-size:14px;color:var(--ink);}
 .calc-item-amount{flex:0 0 auto;font-size:14px;font-weight:800;color:var(--mint-deep);white-space:nowrap;}
+.calc-item-qty{cursor:default;}
+.calc-qty-controls{display:flex;align-items:center;gap:8px;flex:0 0 auto;}
+.calc-qty-btn{
+  width:26px;height:26px;border-radius:50%;border:1.5px solid rgba(155,127,209,.35);background:#fff;
+  color:var(--mint-deep);font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  line-height:1;padding:0;font-family:inherit;transition:background .2s ease;
+}
+.calc-qty-btn:hover{background:var(--panel);}
+.calc-qty-count{min-width:18px;text-align:center;font-weight:800;color:var(--ink);font-size:14px;}
 .calc-total-row{
   display:flex;align-items:center;justify-content:space-between;margin-top:18px;padding:14px 20px;
   border-radius:16px;background:rgba(201,182,234,.14);border:1px solid rgba(155,127,209,.25);
@@ -1067,7 +1071,7 @@ function renderBasicInfo(rows){
   setTitle('title-form', '제목신청양식');
   setTitle('title-faq', '제목FAQ');
   setTitle('title-review', '제목리뷰이벤트');
-  setTitle('title-calc', '제목계산기');
+  setTitle('title-calc', '제목추가계산기');
   /* 포트폴리오 탭 순서: "기본정보" 탭에 항목명 "포트폴리오순서" / "포트폴리오2순서" 를 만들고
      내용 칸에 탭 이름을 원하는 순서대로 쉼표(,)로 구분해서 적으면 그 순서로 탭이 재배치됨
      예: 버츄얼,닐로툰,API,퀄리티업,VR챗,실시간렌즈
@@ -1123,11 +1127,24 @@ function parseCalcCsv(text){
     const group = (row['구분'] || '').trim();
     const label = (row['항목'] || '').trim();
     const amount = parseFloat(String(row['금액'] || '').replace(/[^0-9.\-]/g, '')) || 0;
+    /* "갯수" 칸에 아무 값이라도 적혀 있으면(예: O, 표시 등) 체크박스 대신 +/- 로 개수를 늘릴 수 있는 항목이 됨 */
+    const hasQty = !!(row['갯수'] || '').trim();
     if(!group || !label) return null;
-    return { group, label, amount };
+    return { group, label, amount, hasQty };
   }).filter(Boolean);
 }
 function calcItemHtml(item){
+  if(item.hasQty){
+    return `<div class="calc-item calc-item-qty" data-amount="${item.amount}" data-label="${escapeHtml(item.label)}">
+      <span class="calc-item-label">${escapeHtml(item.label)}</span>
+      <span class="calc-item-amount">${item.amount.toLocaleString()}원 / 개</span>
+      <div class="calc-qty-controls">
+        <button type="button" class="calc-qty-btn" data-dir="-1">−</button>
+        <span class="calc-qty-count">0</span>
+        <button type="button" class="calc-qty-btn" data-dir="1">+</button>
+      </div>
+    </div>`;
+  }
   return `<label class="calc-item">
     <input type="checkbox" class="calc-checkbox" data-amount="${item.amount}" data-label="${escapeHtml(item.label)}">
     <span class="calc-item-label">${escapeHtml(item.label)}</span>
@@ -1155,24 +1172,45 @@ function bindCalcCheckboxes(){
   document.querySelectorAll('.calc-checkbox').forEach(cb => {
     cb.addEventListener('change', updateCalcTotal);
   });
+  document.querySelectorAll('.calc-qty-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const wrap = btn.closest('.calc-item-qty');
+      const countEl = wrap.querySelector('.calc-qty-count');
+      let count = parseInt(countEl.textContent, 10) || 0;
+      count = Math.max(0, count + parseInt(btn.dataset.dir, 10));
+      countEl.textContent = count;
+      updateCalcTotal();
+    });
+  });
 }
 function updateCalcTotal(){
   let total = 0;
   document.querySelectorAll('.calc-checkbox:checked').forEach(cb => { total += parseFloat(cb.dataset.amount) || 0; });
+  document.querySelectorAll('.calc-item-qty').forEach(wrap => {
+    const count = parseInt(wrap.querySelector('.calc-qty-count').textContent, 10) || 0;
+    total += (parseFloat(wrap.dataset.amount) || 0) * count;
+  });
   const el = document.getElementById('calc-total');
   if(el) el.textContent = total.toLocaleString() + '원';
 }
 function copyCalcSelection(){
   const checked = Array.prototype.slice.call(document.querySelectorAll('.calc-checkbox:checked'));
+  const qtyItems = Array.prototype.slice.call(document.querySelectorAll('.calc-item-qty'))
+    .map(wrap => ({ wrap, count: parseInt(wrap.querySelector('.calc-qty-count').textContent, 10) || 0 }))
+    .filter(x => x.count > 0);
   const statusEl = document.getElementById('calc-status');
   const finish = () => { if(statusEl){ statusEl.classList.add('show'); setTimeout(() => statusEl.classList.remove('show'), 1800); } };
-  if(!checked.length) return;
+  if(!checked.length && !qtyItems.length) return;
   let total = 0;
   const lines = checked.map(cb => {
     const amt = parseFloat(cb.dataset.amount) || 0;
     total += amt;
     return `- ${cb.dataset.label} (${amt.toLocaleString()}원)`;
-  });
+  }).concat(qtyItems.map(({ wrap, count }) => {
+    const amt = parseFloat(wrap.dataset.amount) || 0;
+    total += amt * count;
+    return `- ${wrap.dataset.label} x${count} (${(amt * count).toLocaleString()}원)`;
+  }));
   const text = `[추가 견적]\n${lines.join('\n')}\n\n합계 : ${total.toLocaleString()}원`;
   if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(text).then(finish).catch(finish);
