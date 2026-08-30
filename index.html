@@ -82,6 +82,7 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 #portfolio2 .section-icon{color:#E6F5FF;}
 #notice .section-icon{color:#E7E8FF;}
 #form .section-icon{color:#F4EAFF;}
+#calc .section-icon{color:#D3E0F3;}
 #faq .section-icon{color:#FFEDFA;}
 .section-title{font-family:'Jalnan2',cursive;font-size:26px;font-weight:700;color:var(--black);letter-spacing:-.2px;}
 .section-sub{font-size:16px;color:var(--sub);margin:-12px 0 18px 20px;}
@@ -184,10 +185,15 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
   color:var(--sub);font-size:20px;font-weight:700;opacity:.6;
 }
 .process-num{
-  width:44px;height:44px;flex:0 0 auto;border-radius:50%;margin:0 0 10px;padding:0;
+  width:44px;height:44px;flex:0 0 auto;margin:0 0 10px;padding:2px 0 0;
   background:var(--mint-sky);color:#fff;font-family:'Jalnan2',cursive;
-  display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;letter-spacing:.02em;white-space:nowrap;
-  box-shadow:0 8px 16px -4px rgba(155,127,209,.45);
+  display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;letter-spacing:.02em;white-space:nowrap;
+  filter:drop-shadow(0 8px 10px rgba(155,127,209,.45));
+  -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 29'><path d='M16,29 C16,29 2,20 2,10 C2,4 6,0 11,0 C13.5,0 15.5,1.5 16,4 C16.5,1.5 18.5,0 21,0 C26,0 30,4 30,10 C30,20 16,29 16,29 Z'/></svg>");
+  mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 29'><path d='M16,29 C16,29 2,20 2,10 C2,4 6,0 11,0 C13.5,0 15.5,1.5 16,4 C16.5,1.5 18.5,0 21,0 C26,0 30,4 30,10 C30,20 16,29 16,29 Z'/></svg>");
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-size:100% 100%;mask-size:100% 100%;
+  -webkit-mask-position:center;mask-position:center;
 }
 .process-track .process-step:nth-child(1) .process-num{background:#DCD3F3;}
 .process-track .process-step:nth-child(3) .process-num{background:#F8D6E6;}
@@ -202,6 +208,29 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 .process-detail-body strong{color:var(--mint-deep);}
 @media (max-width:600px){.process-detail-body p{font-size:13px;}}
 .process-label{font-family:'Jalnan2',cursive;font-size:17px;color:#595959;font-weight:700;line-height:1.4;white-space:nowrap;}
+
+/* ================= 추가 견적 계산기 ================= */
+.calc-list{display:flex;flex-direction:column;gap:10px;}
+.calc-item{
+  display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:14px;
+  background:rgba(255,255,255,.7);border:1px solid var(--line);cursor:pointer;
+  transition:background .2s ease, border-color .2s ease;
+}
+.calc-item:hover{background:rgba(201,182,234,.12);}
+.calc-item:has(.calc-checkbox:checked){background:rgba(201,182,234,.18);border-color:rgba(155,127,209,.4);}
+.calc-checkbox{width:18px;height:18px;accent-color:var(--mint-deep);flex:0 0 auto;cursor:pointer;}
+.calc-item-label{flex:1;font-size:14px;color:var(--ink);}
+.calc-item-amount{flex:0 0 auto;font-size:14px;font-weight:800;color:var(--mint-deep);white-space:nowrap;}
+.calc-total-row{
+  display:flex;align-items:center;justify-content:space-between;margin-top:18px;padding:14px 20px;
+  border-radius:16px;background:rgba(201,182,234,.14);border:1px solid rgba(155,127,209,.25);
+}
+.calc-total-label{font-size:16px;font-weight:800;color:var(--mint-deep);}
+.calc-total-amount{font-size:20px;font-weight:800;color:var(--ink);}
+@media (max-width:600px){
+  .calc-item-label{font-size:13px;}
+  .calc-item-amount{font-size:13px;}
+}
 
 /* ================= 자주묻는질문 ================= */
 .faq-list{display:flex;flex-direction:column;gap:8px;}
@@ -375,15 +404,15 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 <section class="section" id="process">
   <div class="section-head"><div class="section-icon"></div><div class="section-title" id="title-process">작업 진행 순서</div></div>
   <div class="process-track" id="process-track">
-    <div class="process-step"><div class="process-num">01</div><div class="process-label">문의/상담</div></div>
+    <div class="process-step"><div class="process-num">1</div><div class="process-label">문의/상담</div></div>
     <div class="process-arrow">→</div>
-    <div class="process-step"><div class="process-num">02</div><div class="process-label">결제</div></div>
+    <div class="process-step"><div class="process-num">2</div><div class="process-label">결제</div></div>
     <div class="process-arrow">→</div>
-    <div class="process-step"><div class="process-num">03</div><div class="process-label">1차 컨펌</div></div>
+    <div class="process-step"><div class="process-num">3</div><div class="process-label">1차 컨펌</div></div>
     <div class="process-arrow">→</div>
-    <div class="process-step"><div class="process-num">04</div><div class="process-label">2차 컨펌</div></div>
+    <div class="process-step"><div class="process-num">4</div><div class="process-label">2차 컨펌</div></div>
     <div class="process-arrow">→</div>
-    <div class="process-step"><div class="process-num">05</div><div class="process-label">완성/전달</div></div>
+    <div class="process-step"><div class="process-num">5</div><div class="process-label">완성/전달</div></div>
   </div>
   <div class="process-detail">
     <div class="process-detail-body" id="process-detail-body">
@@ -556,6 +585,23 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
     <div class="btn-wrap">
       <div class="form-toast" id="rf-status">복사되었습니다</div>
       <button type="button" class="form-submit" id="rf-submit" onclick="copyRigForm(this)"><span id="form-submit-text">복사하기</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 추가 견적 계산기 ============ -->
+<section class="section" id="calc">
+  <div class="section-head"><div class="section-icon"></div><div class="section-title" id="title-calc">추가 견적 계산기</div></div>
+  <div class="portfolio-tabs" id="calc-tabs"></div>
+  <div id="calc-groups"></div>
+  <div class="calc-total-row">
+    <div class="calc-total-label">합계</div>
+    <div class="calc-total-amount" id="calc-total">0원</div>
+  </div>
+  <div class="form-button-row">
+    <div class="btn-wrap">
+      <div class="form-toast" id="calc-status">복사되었습니다</div>
+      <button type="button" class="form-submit enabled" id="calc-copy" onclick="copyCalcSelection()">선택 항목 복사하기</button>
     </div>
   </div>
 </section>
@@ -934,7 +980,7 @@ function renderProcessRows(rows){
   const wrap = document.getElementById('process-track');
   if(!wrap || !rows.length) return;
   wrap.innerHTML = rows.map((row, i) => {
-    const num = (row['번호'] || String(i + 1).padStart(2, '0')).trim();
+    const num = (row['번호'] || String(i + 1)).trim();
     const label = escapeHtml(row['라벨'] || '');
     const step = `<div class="process-step"><div class="process-num" style="background:${PROCESS_NUM_COLORS[i % PROCESS_NUM_COLORS.length]}">${escapeHtml(num)}</div><div class="process-label">${label}</div></div>`;
     return i < rows.length - 1 ? step + '<div class="process-arrow">→</div>' : step;
@@ -1021,6 +1067,7 @@ function renderBasicInfo(rows){
   setTitle('title-form', '제목신청양식');
   setTitle('title-faq', '제목FAQ');
   setTitle('title-review', '제목리뷰이벤트');
+  setTitle('title-calc', '제목계산기');
   /* 포트폴리오 탭 순서: "기본정보" 탭에 항목명 "포트폴리오순서" / "포트폴리오2순서" 를 만들고
      내용 칸에 탭 이름을 원하는 순서대로 쉼표(,)로 구분해서 적으면 그 순서로 탭이 재배치됨
      예: 버츄얼,닐로툰,API,퀄리티업,VR챗,실시간렌즈
@@ -1064,6 +1111,78 @@ if(MGMT_SHEET_ID){
 }
 if(MGMT_SHEET_ID){
   fetchSheetRows('기본정보').then(rows => renderBasicInfo(mergeContinuationRows(rows, '항목', '내용'))).catch(() => {});
+}
+
+/* ================= 추가 견적 계산기 - 시트 연동 =================
+   "계산기" 탭에 "구분","항목","금액" 열로 한 줄씩 적으면 됨.
+   구분(예: 닐로툰/릴툰/와루도API/VRC(릴툰)/페이셜/퀄리티업/방송세팅딸각/추가금/버츄얼파일/포폴비공개) 별로
+   탭이 자동으로 생기고, 각 항목은 체크박스로 표시되며 체크한 만큼 합계가 자동 계산됩니다. */
+function parseCalcCsv(text){
+  const rows = csvRowsToObjects(parseCsvGeneric(text));
+  return rows.map(row => {
+    const group = (row['구분'] || '').trim();
+    const label = (row['항목'] || '').trim();
+    const amount = parseFloat(String(row['금액'] || '').replace(/[^0-9.\-]/g, '')) || 0;
+    if(!group || !label) return null;
+    return { group, label, amount };
+  }).filter(Boolean);
+}
+function calcItemHtml(item){
+  return `<label class="calc-item">
+    <input type="checkbox" class="calc-checkbox" data-amount="${item.amount}" data-label="${escapeHtml(item.label)}">
+    <span class="calc-item-label">${escapeHtml(item.label)}</span>
+    <span class="calc-item-amount">${item.amount.toLocaleString()}원</span>
+  </label>`;
+}
+function renderCalc(items, wrapId){
+  const wrap = document.getElementById(wrapId);
+  if(!wrap || !items.length) return;
+  const byGroup = {};
+  items.forEach(it => { (byGroup[it.group] = byGroup[it.group] || []).push(it); });
+  const groupOrder = Object.keys(byGroup);
+  groupOrder.forEach(g => {
+    const panel = ensurePortfolioTab(wrapId, g);
+    if(!panel) return;
+    panel.innerHTML = `<div class="calc-list"></div>`;
+    const list = panel.querySelector('.calc-list');
+    list.innerHTML = byGroup[g].map(calcItemHtml).join('');
+  });
+  const tabsId = wrapId.replace('-groups', '-tabs');
+  reorderPortfolioTabs(tabsId, wrapId, groupOrder.join(','));
+  bindCalcCheckboxes();
+}
+function bindCalcCheckboxes(){
+  document.querySelectorAll('.calc-checkbox').forEach(cb => {
+    cb.addEventListener('change', updateCalcTotal);
+  });
+}
+function updateCalcTotal(){
+  let total = 0;
+  document.querySelectorAll('.calc-checkbox:checked').forEach(cb => { total += parseFloat(cb.dataset.amount) || 0; });
+  const el = document.getElementById('calc-total');
+  if(el) el.textContent = total.toLocaleString() + '원';
+}
+function copyCalcSelection(){
+  const checked = Array.prototype.slice.call(document.querySelectorAll('.calc-checkbox:checked'));
+  const statusEl = document.getElementById('calc-status');
+  const finish = () => { if(statusEl){ statusEl.classList.add('show'); setTimeout(() => statusEl.classList.remove('show'), 1800); } };
+  if(!checked.length) return;
+  let total = 0;
+  const lines = checked.map(cb => {
+    const amt = parseFloat(cb.dataset.amount) || 0;
+    total += amt;
+    return `- ${cb.dataset.label} (${amt.toLocaleString()}원)`;
+  });
+  const text = `[추가 견적]\n${lines.join('\n')}\n\n합계 : ${total.toLocaleString()}원`;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(finish).catch(finish);
+  } else { finish(); }
+}
+if(MGMT_SHEET_ID){
+  fetch(sheetCsvUrl('계산기'))
+    .then(res => res.text())
+    .then(text => renderCalc(parseCalcCsv(text), 'calc-groups'))
+    .catch(() => {});
 }
 
 /* FAQ: "FAQ" 탭에 "질문","답변" 열로 한 줄씩 적으면 그 순서대로 다시 그려짐 */
