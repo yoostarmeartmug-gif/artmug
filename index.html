@@ -232,8 +232,13 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 .calc-total-label{font-size:16px;font-weight:800;color:var(--mint-deep);}
 .calc-total-amount{font-size:20px;font-weight:800;color:var(--ink);}
 @media (max-width:600px){
-  .calc-item-label{font-size:13px;}
-  .calc-item-amount{font-size:13px;}
+  .calc-item{flex-wrap:wrap;align-items:flex-start;row-gap:8px;}
+  .calc-item-label{font-size:13px;flex:1 1 100%;order:1;min-width:0;}
+  .calc-checkbox{order:0;margin-top:2px;}
+  .calc-item-amount{font-size:13px;order:2;flex:0 0 auto;margin-left:auto;}
+  .calc-item-qty .calc-item-label{flex-basis:100%;}
+  .calc-item-qty .calc-item-amount{order:2;margin-left:0;}
+  .calc-qty-controls{order:3;margin-left:auto;}
 }
 
 /* ================= 자주묻는질문 ================= */
