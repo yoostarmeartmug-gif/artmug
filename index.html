@@ -281,11 +281,10 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 .faq-qa:hover{background:rgba(201,182,234,.12);}
 .faq-qa[open]{background:rgba(201,182,234,.16);box-shadow:0 10px 24px -14px rgba(160,140,190,.5);}
 .faq-q{
-  position:relative;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--ink);
-  cursor:pointer;list-style:none;padding:16px 52px;
+  position:relative;display:flex;align-items:center;justify-content:center;gap:10px;font-size:14px;font-weight:800;color:var(--ink);
+  cursor:pointer;list-style:none;padding:16px 52px 16px 20px;
 }
 .faq-q::-webkit-details-marker{display:none;}
-.faq-q > .notice-num{position:absolute;left:18px;top:50%;transform:translateY(-50%);}
 .faq-q span:nth-child(2){flex:0 1 auto;text-align:center;}
 .faq-caret{
   position:absolute;right:18px;top:50%;transform:translateY(-50%);
@@ -365,15 +364,16 @@ img,video,iframe{max-width:100%;display:block;-webkit-user-drag:none;user-drag:n
 .rf-ox{flex:1;text-align:center;}
 .rf-ox.active{background:var(--mint-sky);color:#fff;border-color:transparent;}
 .rf-textarea{resize:vertical;min-height:70px;line-height:1.6;}
-.form-grid{display:flex;flex-direction:column;gap:20px;}
-.form-field label{display:block;font-size:16px;font-weight:800;color:var(--ink);margin-bottom:8px;letter-spacing:.02em;}
+.form-grid{display:flex;flex-direction:column;gap:20px;align-items:center;}
+.form-field{width:100%;text-align:center;}
+.form-field label{display:block;font-size:16px;font-weight:800;color:var(--ink);margin-bottom:8px;letter-spacing:.02em;text-align:center;}
 .form-field label .opt{font-weight:400;color:var(--sub);}
 .rf-text-input{
   width:100%;padding:11px 14px;border-radius:14px;border:1.5px solid var(--line);
-  background:rgba(255,255,255,.8);font-family:inherit;font-size:16px;color:var(--ink);
+  background:rgba(255,255,255,.8);font-family:inherit;font-size:16px;color:var(--ink);text-align:center;
 }
 .rf-text-input:focus{outline:none;border-color:var(--mint-deep);}
-.select-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.select-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
 .select-btn{
   padding:10px 20px;border-radius:999px;border:1.5px solid rgba(155,127,209,.3);background:rgba(255,255,255,.7);
   font-family:inherit;font-size:14px;font-weight:700;color:var(--sub);cursor:pointer;
